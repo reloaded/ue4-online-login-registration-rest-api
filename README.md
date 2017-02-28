@@ -1,3 +1,5 @@
+# What's this?
+
 This is a collection of REST APIs used by my Unreal Engine 4: Online Login/Registration tutorial series. 
 
 The following features are provided out of the box:
@@ -20,6 +22,7 @@ Check out the [YouTube playlist](https://www.youtube.com/playlist?list=PLaVz4Aml
 7. Setup/check Phalcon dev-tools is configured and working in project
 8. Import SQL script
 9. Apply DB migrations (if any available)
+10. Setup Apache/Nginx Virtual Host.
 
 # References
 - [Using GUIDs with MySQL MariaDB](https://mariadb.com/kb/en/mariadb/guiduuid-performance/)
