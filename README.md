@@ -1,6 +1,6 @@
 # What's this?
 
-This is a collection of REST APIs used by my Unreal Engine 4: Online Login/Registration tutorial series. 
+This is a collection of REST APIs used by my [Unreal Engine 4: Online Login/Registration]((https://www.youtube.com/playlist?list=PLaVz4AmlosnFixCPTJNsLxQpiGSijIOXy)) YouTube tutorial series. 
 
 The following features are provided out of the box:
  - Player authentication/login.
