@@ -1,0 +1,15 @@
+{
+  "name": "reloaded/ue4-online-login",
+  "description": "An online login and registration REST API used by my Unreal Engine 4 online login tutorial series on Youtube.",
+  "minimum-stability": "dev",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Jason Harris",
+      "email": "1337reloaded@gmail.com"
+    }
+  ],
+  "require": {
+    "phalcon/devtools": "dev-master"
+  }
+}
