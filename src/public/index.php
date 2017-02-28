@@ -1,0 +1,38 @@
+<?php
+
+define('BASE_PATH', dirname(__DIR__));
+define('APP_PATH', BASE_PATH . '/app');
+
+require_once APP_PATH . '/config/DiConfig.php';
+require_once APP_PATH . '/config/LoaderConfig.php';
+require_once APP_PATH . '/config/RouteConfig.php';
+
+error_reporting(E_ALL);
+
+try {
+    /**
+     * Setup dependency injection
+     */
+    $di = DiConfig::RegisterDependencies();
+
+    /**
+     * Setup route handlers
+     */
+    RouteConfig::RegisterRoutes($di);
+
+    /**
+     * Setup autoloader
+     */
+    LoaderConfig::RegisterLoader($di);
+
+    /**
+     * Handle the request
+     */
+    $application = new \Phalcon\Mvc\Application($di);
+
+    echo $application->handle()->getContent();
+
+} catch (\Exception $e) {
+    echo $e->getMessage() . '<br>';
+    echo '<pre>' . $e->getTraceAsString() . '</pre>';
+}
