@@ -1,5 +1,7 @@
 <?php
 
+namespace Reloaded\UnrealEngine4\Web\Config;
+
 class AppConfig
 {
     public static function GetConfig()

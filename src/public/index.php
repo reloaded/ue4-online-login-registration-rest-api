@@ -1,5 +1,9 @@
 <?php
 
+use Reloaded\UnrealEngine4\Web\Config\DiConfig;
+use Reloaded\UnrealEngine4\Web\Config\LoaderConfig;
+use Reloaded\UnrealEngine4\Web\Config\RouteConfig;
+
 define('BASE_PATH', dirname(__DIR__));
 define('APP_PATH', BASE_PATH . '/app');
 

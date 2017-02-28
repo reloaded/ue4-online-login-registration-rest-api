@@ -1,8 +1,12 @@
 <?php
 
+namespace Reloaded\UnrealEngine4\Web\Config;
+
 require_once 'AppConfig.php';
 
 use Phalcon\Di\FactoryDefault;
+use Phalcon\DiInterface;
+use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\Url as UrlResolver;
 use Phalcon\Mvc\View;
 use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
@@ -10,7 +14,7 @@ use Phalcon\Mvc\Model\Metadata\Memory as MetaDataAdapter;
 
 class DiConfig
 {
-    public static function RegisterDependencies() : \Phalcon\DiInterface
+    public static function RegisterDependencies() : DiInterface
     {
         /**
          * The FactoryDefault Dependency Injector automatically registers
@@ -73,6 +77,16 @@ class DiConfig
          */
         $di->setShared('modelsMetadata', function () {
             return new MetaDataAdapter();
+        });
+
+        $di->set('dispatcher', function () {
+            $dispatcher = new Dispatcher();
+
+            $dispatcher->setDefaultNamespace(
+                'Reloaded\\UnrealEngine4\\Web\\Controllers'
+            );
+
+            return $dispatcher;
         });
 
         return $di;
