@@ -9,7 +9,7 @@
       "email": "1337reloaded@gmail.com"
     }
   ],
-  "require": {
-    "phalcon/devtools": "dev-master"
+  "require-dev": {
+    "phalcon/devtools": "~3.0"
   }
 }

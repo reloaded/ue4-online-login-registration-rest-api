@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<framework xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="schemas/frameworkDescriptionVersion1.1.4.xsd" name="Custom_phalcon" invoke="$ProjectFileDir$\src\vendor\phalcon\devtools\phalcon.bat" alias="phalcon" enabled="true" version="2">
+  <help><![CDATA[Phalcon Developer CLI Tool]]></help>
+</framework>
+
