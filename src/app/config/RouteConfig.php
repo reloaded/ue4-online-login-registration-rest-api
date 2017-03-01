@@ -10,6 +10,13 @@ use Phalcon\DiInterface;
 
 class RouteConfig
 {
+    /**
+     * Register each of our API routes with Phalcon.
+     *
+     * @param DiInterface $di Phalcon Dependency Injection service
+     * @see https://docs.phalconphp.com/en/latest/reference/routing.html
+     *
+     */
     public static function RegisterRoutes(DiInterface $di)
     {
         /** @var \Phalcon\Mvc\Router $router */

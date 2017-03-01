@@ -11,12 +11,20 @@ use Phalcon\Loader;
 
 class LoaderConfig
 {
+    /**
+     * Configures PHP autoloading that locates PHP classes automatically therefore removing your need to require or
+     * include class files yourself.
+     *
+     * @param DiInterface $di Phalcon Dependency Injection service.
+     * @see https://docs.phalconphp.com/en/latest/reference/loader.html
+     *
+     */
     public static function RegisterLoader(DiInterface $di)
     {
         $loader = new Loader();
 
         /**
-         * We're a registering a set of directories taken from the configuration file
+         * Register our Phalcon classes and namespaces with the Phalcon loader
          */
         $loader->registerNamespaces(
             [
@@ -26,6 +34,10 @@ class LoaderConfig
 
             ]
         )->register();
+
+        /**
+         * Require the Composer vendor autoloader file as well so Composer's autoload can load our vendor libraries
+         */
 
         /** @noinspection PhpIncludeInspection */
         require_once $di->getShared('config')->application->vendorDir . 'autoload.php';

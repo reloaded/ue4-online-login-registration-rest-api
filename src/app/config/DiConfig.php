@@ -18,6 +18,12 @@ use Phalcon\Mvc\Model\Metadata\Memory as MetaDataAdapter;
 
 class DiConfig
 {
+    /**
+     * Configure dependency injection of external services.
+     *
+     * @return DiInterface
+     * @see https://docs.phalconphp.com/en/latest/reference/di.html
+     */
     public static function RegisterDependencies() : DiInterface
     {
         /**
