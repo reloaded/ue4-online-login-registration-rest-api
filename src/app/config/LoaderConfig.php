@@ -27,5 +27,7 @@ class LoaderConfig
             ]
         )->register();
 
+        /** @noinspection PhpIncludeInspection */
+        require_once $di->getShared('config')->application->vendorDir . 'autoload.php';
     }
 }

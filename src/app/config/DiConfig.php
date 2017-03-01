@@ -47,13 +47,16 @@ class DiConfig
 
         /**
          * Setting up the view component
+         *
+         * @note We don't use Views because this is a REST API, but Phalcon requires this DI key to
+         * be setup and return a View object. So we return a newly empty constructed View.
          */
         $di->setShared('view', function () use($di) {
             return new View();
         });
 
         /**
-         * Database connection is created based in the parameters defined in the configuration file
+         * Database connection is created based on the parameters defined in the configuration file
          */
         $di->setShared('db', function () use($di) {
             $config = $di->getShared("config");
@@ -77,7 +80,9 @@ class DiConfig
         });
 
         /**
-         * If the configuration specify the use of metadata adapter use it or use memory otherwise
+         * Specify the metadata adapter to use to speed up looking up model metadata.
+         *
+         * @see https://docs.phalconphp.com/en/latest/reference/models-metadata.html
          */
         $di->setShared('modelsMetadata', function () {
             return new MetaDataAdapter();
@@ -91,6 +96,10 @@ class DiConfig
             );
 
             return $dispatcher;
+        });
+
+        $di->setShared('jsonMapper', function() {
+            return new \JsonMapper();
         });
 
         return $di;

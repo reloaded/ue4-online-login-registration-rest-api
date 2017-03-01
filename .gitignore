@@ -102,4 +102,3 @@ fabric.properties
 # *.ipr
 
 # End of https://www.gitignore.io/api/phpstorm
-/src/composer.lock

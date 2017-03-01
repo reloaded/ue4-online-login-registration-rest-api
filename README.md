@@ -30,3 +30,4 @@ Check out the [YouTube playlist](https://www.youtube.com/playlist?list=PLaVz4Aml
 - [Configuring Apache for Phalcon](https://docs.phalconphp.com/en/latest/reference/apache.html)
 - [Configuring Nginx for Phalcon](https://docs.phalconphp.com/en/latest/reference/nginx.html)
 - [Configuring PhpStorm IDE stubs for Phalcon](https://phalconphp.com/en/download/stubs)
+- [JsonMapper library](https://github.com/cweiske/jsonmapper)

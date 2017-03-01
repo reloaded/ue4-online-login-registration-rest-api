@@ -9,7 +9,13 @@
       "email": "1337reloaded@gmail.com"
     }
   ],
+  "config": {
+    "vendor-dir": "src/app/vendor"
+  },
   "require-dev": {
     "phalcon/devtools": "~3.0"
+  },
+  "require": {
+    "netresearch/jsonmapper": "^1.1"
   }
 }
