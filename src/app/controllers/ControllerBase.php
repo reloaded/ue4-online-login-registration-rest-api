@@ -10,5 +10,11 @@ use Phalcon\Mvc\Controller;
 
 class ControllerBase extends Controller
 {
+    /** @var \JsonMapper */
+    protected $mapper;
 
+    public function initialize()
+    {
+        $this->mapper = $this->di->getShared('jsonMapper');
+    }
 }
