@@ -1,4 +1,9 @@
 <?php
+/**
+ * @author Jason Harris <1337reloaded@gmail.com>
+ * @date 2/28/2017 4:15 PM
+ */
+
 /*
  * Modified: prepend directory path of current file, because of this file own different ENV under between Apache and command line.
  * NOTE: please remove this comment.
