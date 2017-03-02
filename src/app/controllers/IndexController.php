@@ -6,9 +6,9 @@
 
 namespace Reloaded\UnrealEngine4\Web\Controllers;
 
+use App\Library\Net\Responses\FaultResponse;
 use Phalcon\Http\ResponseInterface;
-use Reloaded\UnrealEngine4\Library\Net\HttpStatusCode;
-use Reloaded\UnrealEngine4\Library\Responses\FaultResponse;
+use App\Library\Net\HttpStatusCode;
 
 class IndexController extends ControllerBase
 {
