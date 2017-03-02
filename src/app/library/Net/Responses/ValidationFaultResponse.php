@@ -28,7 +28,7 @@ class ValidationFaultResponse extends AbstractResponse implements IValidationFau
     /**
      * @inheritDoc
      */
-    public function addValidationError(IValidationFieldError $faultedField): void
+    public function addValidationError(IValidationFieldError $faultedField)
     {
         $this->faultedFields[] = $faultedField;
     }
@@ -36,7 +36,7 @@ class ValidationFaultResponse extends AbstractResponse implements IValidationFau
     /**
      * @inheritDoc
      */
-    public function removeFieldValidationErrors(string $field): void
+    public function removeFieldValidationErrors(string $field)
     {
         $filteredList = array_filter(
             $this->faultedFields,

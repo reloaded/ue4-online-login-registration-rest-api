@@ -20,14 +20,14 @@ interface IValidationFaultResponse
      *
      * @param IValidationFieldError $faultedField
      */
-    public function addValidationError(IValidationFieldError $faultedField): void;
+    public function addValidationError(IValidationFieldError $faultedField);
 
     /**
      * Removes all validation errors for the given field from the response.
      *
      * @param string $field
      */
-    public function removeFieldValidationErrors(string $field): void;
+    public function removeFieldValidationErrors(string $field);
 
     /**
      * Returns a list of field validation errors.
