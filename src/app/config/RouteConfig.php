@@ -22,6 +22,10 @@ class RouteConfig
         /** @var \Phalcon\Mvc\Router $router */
         $router = $di->getShared("router");
 
+        $router->clear();
+
+        $router->removeExtraSlashes(true);
+
         $router->notFound([
             'controller' => 'index',
             'action' => 'route404'
