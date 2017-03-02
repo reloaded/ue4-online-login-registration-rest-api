@@ -12,10 +12,8 @@ namespace Reloaded\UnrealEngine4\Library\Net;
  *
  * Class HttpStatusCode
  */
-final class HttpStatusCode extends \SplEnum
+final class HttpStatusCode
 {
-    const __default = self::OK;
-
     /**
      * Equivalent to HTTP status 202. Accepted indicates that the request has been accepted for further processing.
      *
