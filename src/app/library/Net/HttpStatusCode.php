@@ -5,7 +5,7 @@
  * @date 3/1/2017 11:43 PM
  */
 
-namespace Reloaded\UnrealEngine4\Library\Net;
+namespace App\Library\Net;
 
 /**
  * The HttpStatusCode enumeration contains the values of the status codes defined in RFC 2616 for HTTP 1.1.

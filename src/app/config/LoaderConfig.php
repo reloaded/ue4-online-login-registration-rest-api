@@ -30,7 +30,7 @@ class LoaderConfig
             [
                 'Reloaded\\UnrealEngine4\\Web\\Controllers' => $di->getShared("config")->application->controllersDir,
                 'Reloaded\\UnrealEngine4\\Models' => $di->getShared("config")->application->modelsDir,
-                'Reloaded\\UnrealEngine4\\Library' => $di->getShared("config")->application->libraryDir
+                'App\\Library' => $di->getShared("config")->application->libraryDir
 
             ]
         )->register();
