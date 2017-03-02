@@ -5,12 +5,14 @@
  * @date 3/1/2017 11:43 PM
  */
 
+namespace Reloaded\UnrealEngine4\Library\Net;
+
 /**
  * The HttpStatusCode enumeration contains the values of the status codes defined in RFC 2616 for HTTP 1.1.
  *
  * Class HttpStatusCode
  */
-final class HttpStatusCode extends SplEnum
+final class HttpStatusCode extends \SplEnum
 {
     const __default = self::OK;
 
