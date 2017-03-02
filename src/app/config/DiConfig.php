@@ -24,7 +24,7 @@ class DiConfig
      * @return DiInterface
      * @see https://docs.phalconphp.com/en/latest/reference/di.html
      */
-    public static function RegisterDependencies() : DiInterface
+    public static function registerDependencies() : DiInterface
     {
         /**
          * The FactoryDefault Dependency Injector automatically registers

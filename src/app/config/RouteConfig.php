@@ -17,7 +17,7 @@ class RouteConfig
      * @see https://docs.phalconphp.com/en/latest/reference/routing.html
      *
      */
-    public static function RegisterRoutes(DiInterface $di)
+    public static function registerRoutes(DiInterface $di)
     {
         /** @var \Phalcon\Mvc\Router $router */
         $router = $di->getShared("router");
@@ -29,6 +29,11 @@ class RouteConfig
         $router->notFound([
             'controller' => 'index',
             'action' => 'route404'
+        ]);
+
+        $router->addPost("/session/register", [
+            'controller' => 'session',
+            'action' => 'register'
         ]);
 
         $router->handle();

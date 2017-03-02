@@ -17,17 +17,17 @@ try {
     /**
      * Setup dependency injection
      */
-    $di = DiConfig::RegisterDependencies();
+    $di = DiConfig::registerDependencies();
 
     /**
      * Setup route handlers
      */
-    RouteConfig::RegisterRoutes($di);
+    RouteConfig::registerRoutes($di);
 
     /**
      * Setup autoloader
      */
-    LoaderConfig::RegisterLoader($di);
+    LoaderConfig::registerLoader($di);
 
     /**
      * Handle the request

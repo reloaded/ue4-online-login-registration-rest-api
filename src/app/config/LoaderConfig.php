@@ -19,7 +19,7 @@ class LoaderConfig
      * @see https://docs.phalconphp.com/en/latest/reference/loader.html
      *
      */
-    public static function RegisterLoader(DiInterface $di)
+    public static function registerLoader(DiInterface $di)
     {
         $loader = new Loader();
 
