@@ -18,6 +18,13 @@ class ValidationFaultResponse extends AbstractResponse implements IValidationFau
     /** @var IValidationFieldError[] */
     protected $faultedFields;
 
+    #region Constructors
+    public function __construct(int $statusCode = null)
+    {
+        $this->statusCode = $statusCode;
+    }
+    #endregion
+
     /**
      * @inheritDoc
      */
