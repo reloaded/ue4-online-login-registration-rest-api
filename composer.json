@@ -16,6 +16,8 @@
     "phalcon/devtools": "~3.0"
   },
   "require": {
-    "netresearch/jsonmapper": "^1.1"
+    "netresearch/jsonmapper": "^1.1",
+    "ramsey/uuid": "^3.5",
+    "moontoast/math": "^1.1"
   }
 }
