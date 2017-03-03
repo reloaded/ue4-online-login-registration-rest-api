@@ -2,199 +2,28 @@
 
 namespace Reloaded\UnrealEngine4\Models;
 
-class PlayerSessions extends \Phalcon\Mvc\Model
+use Ramsey\Uuid\Uuid;
+
+class PlayerSessions extends AbstractPlayerSessions
 {
-
-    /**
-     *
-     * @var string
-     * @Primary
-     * @Column(type="string", length=16, nullable=false)
-     */
-    protected $PlayerId;
-
-    /**
-     *
-     * @var string
-     * @Column(type="string", length=16, nullable=false)
-     */
-    protected $SessionId;
-
-    /**
-     *
-     * @var string
-     * @Column(type="string", nullable=false)
-     */
-    protected $Expiration;
-
-    /**
-     *
-     * @var string
-     * @Column(type="string", length=16, nullable=false)
-     */
-    protected $RemoteIp;
-
-    /**
-     *
-     * @var string
-     * @Column(type="string", nullable=false)
-     */
-    protected $Created;
-
-    /**
-     * Method to set the value of field PlayerId
-     *
-     * @param string $PlayerId
-     * @return $this
-     */
-    public function setPlayerId($PlayerId)
+    public function beforeSave()
     {
-        $this->PlayerId = $PlayerId;
-
-        return $this;
+        // Convert the GUID string into binary
+        $this->SessionId = hex2bin(str_replace('-', '', $this->SessionId));
+        $this->PlayerId = hex2bin(str_replace('-', '', $this->PlayerId));
     }
 
-    /**
-     * Method to set the value of field SessionId
-     *
-     * @param string $SessionId
-     * @return $this
-     */
-    public function setSessionId($SessionId)
+    public function afterFetch()
     {
-        $this->SessionId = $SessionId;
-
-        return $this;
+        // Convert the binary GUID to a GUID string
+        $this->SessionId = Uuid::fromBytes($this->SessionId)->toString();
+        $this->PlayerId = Uuid::fromBytes($this->PlayerId)->toString();
     }
 
-    /**
-     * Method to set the value of field Expiration
-     *
-     * @param string $Expiration
-     * @return $this
-     */
-    public function setExpiration($Expiration)
+    public function afterSave()
     {
-        $this->Expiration = $Expiration;
-
-        return $this;
+        // Convert the binary GUID to a GUID string
+        $this->SessionId = Uuid::fromBytes($this->SessionId)->toString();
+        $this->PlayerId = Uuid::fromBytes($this->PlayerId)->toString();
     }
-
-    /**
-     * Method to set the value of field RemoteIp
-     *
-     * @param string $RemoteIp
-     * @return $this
-     */
-    public function setRemoteIp($RemoteIp)
-    {
-        $this->RemoteIp = $RemoteIp;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field Created
-     *
-     * @param string $Created
-     * @return $this
-     */
-    public function setCreated($Created)
-    {
-        $this->Created = $Created;
-
-        return $this;
-    }
-
-    /**
-     * Returns the value of field PlayerId
-     *
-     * @return string
-     */
-    public function getPlayerId()
-    {
-        return $this->PlayerId;
-    }
-
-    /**
-     * Returns the value of field SessionId
-     *
-     * @return string
-     */
-    public function getSessionId()
-    {
-        return $this->SessionId;
-    }
-
-    /**
-     * Returns the value of field Expiration
-     *
-     * @return string
-     */
-    public function getExpiration()
-    {
-        return $this->Expiration;
-    }
-
-    /**
-     * Returns the value of field RemoteIp
-     *
-     * @return string
-     */
-    public function getRemoteIp()
-    {
-        return $this->RemoteIp;
-    }
-
-    /**
-     * Returns the value of field Created
-     *
-     * @return string
-     */
-    public function getCreated()
-    {
-        return $this->Created;
-    }
-
-    /**
-     * Initialize method for model.
-     */
-    public function initialize()
-    {
-        $this->setSchema("ue4");
-        $this->belongsTo('PlayerId', 'Reloaded\UnrealEngine4\Models\\Players', 'Id', ['alias' => 'Players']);
-    }
-
-    /**
-     * Allows to query a set of records that match the specified conditions
-     *
-     * @param mixed $parameters
-     * @return PlayerSessions[]|PlayerSessions
-     */
-    public static function find($parameters = null)
-    {
-        return parent::find($parameters);
-    }
-
-    /**
-     * Allows to query the first record that match the specified conditions
-     *
-     * @param mixed $parameters
-     * @return PlayerSessions
-     */
-    public static function findFirst($parameters = null)
-    {
-        return parent::findFirst($parameters);
-    }
-
-    /**
-     * Returns table name mapped in the model.
-     *
-     * @return string
-     */
-    public function getSource()
-    {
-        return 'player_sessions';
-    }
-
 }
