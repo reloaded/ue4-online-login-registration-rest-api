@@ -6,6 +6,8 @@
 
 namespace App\Library\Net\Responses;
 
+use Phalcon\Validation\Message\Group;
+
 
 /**
  * Represents a faulted response that can have an associated HTTP status code and a list of field validation errors.
@@ -84,6 +86,20 @@ class ValidationFaultResponse extends AbstractResponse implements IValidationFau
             }
 
             $this->addValidationError($field);
+        }
+    }
+
+    /**
+     * Adds each message in a Phalcon validation message group to the fault response. Each Phalcon validation message
+     * is converted to a IValidationFieldError.
+     *
+     * @param Group $group
+     */
+    public function addPhalconValidations(Group $group)
+    {
+        foreach($group as $field)
+        {
+            $this->addValidationError(new ValidationFieldError($field->getField(), $field->getMessage()));
         }
     }
 }
