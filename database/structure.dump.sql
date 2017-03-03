@@ -18,7 +18,7 @@ USE `ue4`;
 
 -- Dumping structure for table ue4.players
 CREATE TABLE IF NOT EXISTS `players` (
-  `Id` binary(16) NOT NULL DEFAULT '0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0',
+  `Id` binary(16) NOT NULL,
   `Email` varchar(255) NOT NULL,
   `InGameName` varchar(25) NOT NULL,
   `Password` varchar(255) NOT NULL,
