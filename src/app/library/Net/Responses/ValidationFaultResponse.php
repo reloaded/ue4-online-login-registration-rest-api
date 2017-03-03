@@ -6,6 +6,7 @@
 
 namespace App\Library\Net\Responses;
 
+use Phalcon\Mvc\Model\MessageInterface;
 use Phalcon\Validation\Message\Group;
 
 
@@ -95,11 +96,25 @@ class ValidationFaultResponse extends AbstractResponse implements IValidationFau
      *
      * @param Group $group
      */
-    public function addPhalconValidations(Group $group)
+    public function addPhalconValidationGroup(Group $group)
     {
         foreach($group as $field)
         {
             $this->addValidationError(new ValidationFieldError($field->getField(), $field->getMessage()));
+        }
+    }
+
+    /**
+     * Adds each message in a list of Phalcon model validation messages to the fault response. Each Phalcon message
+     * is converted to a IValidationFieldError.
+     *
+     * @param MessageInterface[] $messages
+     */
+    public function addPhalconModelMessages(array $messages)
+    {
+        foreach($messages as $message)
+        {
+            $this->addValidationError(new ValidationFieldError($message->getField(), $message->getMessage()));
         }
     }
 }
