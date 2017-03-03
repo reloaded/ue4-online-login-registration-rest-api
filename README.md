@@ -1,6 +1,8 @@
 # What's this?
 
-This is a collection of REST APIs used by my [Unreal Engine 4: Online Login/Registration](https://www.youtube.com/playlist?list=PLaVz4AmlosnFixCPTJNsLxQpiGSijIOXy) YouTube tutorial series. 
+This is a collection of REST APIs used by my 
+[Unreal Engine 4: Online Login/Registration](https://www.youtube.com/playlist?list=PLaVz4AmlosnFixCPTJNsLxQpiGSijIOXy) 
+YouTube tutorial series. 
 
 The following features are provided out of the box:
  - Player authentication/login.
@@ -10,21 +12,26 @@ The following features are provided out of the box:
  - Account password recovery using email.
  - Authentication sessions.
   
-Check out the [YouTube playlist](https://www.youtube.com/playlist?list=PLaVz4AmlosnFixCPTJNsLxQpiGSijIOXy). Please Like, Subscribe and Share :) 
+Check out the [YouTube playlist](https://www.youtube.com/playlist?list=PLaVz4AmlosnFixCPTJNsLxQpiGSijIOXy). Please Like,
+Subscribe and Share :) 
 
 # Environment Setup
 1. Install XAMPP with PHP 7.0 https://www.apachefriends.org/download.html
-2. Add PHP path to your Windows PATH environment variable
-3. Install HeidiSQL https://www.heidisql.com/
-4. Download Phalcon and put in PHP ext/ folder https://phalconphp.com/en/download/
-5. Update php.ini, load php_phalcon.dll
-6. Install composer https://getcomposer.org/
-7. Setup/check Phalcon dev-tools is configured and working in project
-8. Import SQL script
-9. Apply DB migrations (if any available)
-10. Setup Apache/Nginx Virtual Host.
+1. Add PHP path to your Windows PATH environment variable
+1. Install HeidiSQL https://www.heidisql.com/
+1. Download Phalcon and put in PHP ext/ folder https://phalconphp.com/en/download/
+1. Update php.ini, load php_phalcon.dll
+1. Install composer https://getcomposer.org/
+1. Clone this repo or download and extract it.
+1. Setup Apache/Nginx Virtual Host.
+1. Navigate to the root of this repo where the `composer.lock` file exists and execute `composer install` to install PHP
+dependency libraries.
+1. Setup/check Phalcon dev-tools is configured and working in project.
+1. Import SQL script
+1. Apply DB migrations (if any available)
 
-NOTE: There might be issues with generating GUID/UUID. See more under the Requirements section of the PHP composer package [ramsey/uuid](https://github.com/ramsey/uuid)
+NOTE: There might be issues with generating GUID/UUID in PHP. See more under the Requirements section of the PHP 
+composer package [ramsey/uuid](https://github.com/ramsey/uuid)
 
 # GUID/UUID as Primary Keys in the DB
 This project uses GUID as primary keys (and columns that reference those PRIMARY KEYS) for all critical tables. 
