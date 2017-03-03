@@ -8,9 +8,11 @@ namespace App\Library\Requests;
 
 
 use Phalcon\Validation;
+use Phalcon\Validation\Message\Group;
 use Phalcon\Validation\Validator\Confirmation;
 use Phalcon\Validation\Validator\Regex;
 use Phalcon\Validation\Validator\StringLength;
+use Reloaded\UnrealEngine4\Models\Players;
 
 class RegistrationRequestValidator extends Validation
 {
@@ -67,5 +69,27 @@ class RegistrationRequestValidator extends Validation
                 'message' => 'Passwords do not match.'
             ])
         );
+    }
+
+    /**
+     * Executed after validation
+     *
+     * @param RegistrationRequest $data
+     * @param object $entity
+     * @param Group $messages
+     */
+    public function afterValidation($data, $entity, $messages)
+    {
+        $emailRegistered = Players::findFirst([
+            'conditions' => 'Email = ?1',
+            'bind' => [
+                1 => $data->Email
+            ]
+        ]);
+
+        if($emailRegistered)
+        {
+            $messages->appendMessage(new Validation\Message('Email is already registered.', 'Email'));
+        }
     }
 }
