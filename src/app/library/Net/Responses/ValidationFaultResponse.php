@@ -71,5 +71,19 @@ class ValidationFaultResponse extends AbstractResponse implements IValidationFau
         ];
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function addValidationErrors(array $faultedFields)
+    {
+        foreach($faultedFields as $field)
+        {
+            if(!$field instanceof IValidationFieldError)
+            {
+                throw new \InvalidArgumentException('Expected instance of IValidationFieldError.');
+            }
 
+            $this->addValidationError($field);
+        }
+    }
 }
