@@ -12,6 +12,7 @@ require_once APP_PATH . '/config/LoaderConfig.php';
 require_once APP_PATH . '/config/RouteConfig.php';
 
 error_reporting(E_ALL);
+ini_set('display_errors', true);
 
 try {
     /**
