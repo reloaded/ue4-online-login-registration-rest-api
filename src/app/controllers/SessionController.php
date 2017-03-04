@@ -8,6 +8,7 @@ namespace Reloaded\UnrealEngine4\Web\Controllers;
 
 use App\Library\Net\HttpStatusCode;
 use App\Library\Net\Responses\DataObjectResponse;
+use App\Library\Net\Responses\FaultResponse;
 use App\Library\Net\Responses\IDataObject;
 use App\Library\Net\Responses\ValidationFaultResponse;
 use App\Library\Net\Responses\ValidationFieldError;
@@ -81,6 +82,13 @@ class SessionController extends ControllerBase
         catch(\Exception $ex)
         {
             $this->db->rollback();
+
+            return $this->response
+                ->setStatusCode(HttpStatusCode::InternalServerError)
+                ->setJsonContent(new FaultResponse(
+                    'There was an unexpected error while registering your account.',
+                    HttpStatusCode::InternalServerError
+                ));
         }
     }
 
