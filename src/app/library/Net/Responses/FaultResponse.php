@@ -23,16 +23,30 @@ class FaultResponse extends AbstractResponse implements IFaultResponse, \JsonSer
     protected $message;
 
     #region Constructors
-    public function __construct($message, $statusCode)
+
+    /**
+     * FaultResponse constructor.
+     * @param string $message
+     * @param int $statusCode
+     */
+    public function __construct(string $message, int $statusCode)
     {
         $this->statusCode = $statusCode;
         $this->message = $message;
     }
 
+    /**
+     * Constructs a new FaultResponse from an exception. Uses the exception code as the response status code and
+     * exception message for the fault message.
+     *
+     * @param \Exception $exception
+     * @return FaultResponse
+     */
     public static function fromException(\Exception $exception)
     {
         return new self($exception->getMessage(), $exception->getCode());
     }
+
     #endregion
 
     /**
