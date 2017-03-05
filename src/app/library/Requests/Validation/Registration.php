@@ -8,6 +8,7 @@ namespace App\Library\Requests\Validation;
 
 
 use App\Library\Requests\Registration as RegistrationRequest;
+use App\Validation\Player\Password;
 use Phalcon\Validation;
 use Phalcon\Validation\Message\Group;
 use Phalcon\Validation\Validator\Confirmation;
@@ -17,51 +18,12 @@ use App\Models\Players;
 
 class Registration extends Validation
 {
+    /** @var Password */
+    protected $_passwordValidation;
+
     public function initialize()
     {
-        // 1 uppercase letter
-        $this->add(
-            'Password',
-            new Regex([
-                'pattern' => '/(.*)[A-Z](.*)/',
-                'message' => 'Password must have at least 1 uppercase letter.'
-            ])
-        );
-
-        // 2 lowercase letters
-        $this->add(
-            'Password',
-            new Regex([
-                'pattern' => '/(.*)[a-z]{2,}(.*)/',
-                'message' => 'Password must have at least 2 lowercase letters.'
-            ])
-        );
-
-        // 1 digit
-        $this->add(
-            'Password',
-            new Regex([
-                'pattern' => '/(.*)[0-9](.*)/',
-                'message' => 'Password must have at least 1 digit.'
-            ])
-        );
-
-        // 2 special characters
-        $this->add(
-            'Password',
-            new Regex([
-                'pattern' => '/(.*)[!@#$%^&*()\-_=+{};:,<.>]{2,}(.*)/',
-                'message' => 'Password must have at least 2 special characters.'
-            ])
-        );
-
-        $this->add(
-            'Password',
-            new StringLength([
-                'min' => 6,
-                'minimumMessage' => 'Password must be at least 6 characters.'
-            ])
-        );
+        $this->_passwordValidation = new Password();
 
         $this->add(
             'Password',
@@ -81,6 +43,10 @@ class Registration extends Validation
      */
     public function afterValidation($data, RegistrationRequest $entity, $messages)
     {
+        /** @var Validation\Message[] $validationMessages */
+        $validationMessages = $this->_passwordValidation->validate(null, $entity);
+        $messages->appendMessages($validationMessages);
+
         $emailRegistered = Players::findFirst([
             'conditions' => 'Email = ?1',
             'bind' => [
