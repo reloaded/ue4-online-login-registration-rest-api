@@ -28,7 +28,8 @@ return new \Phalcon\Config([
         'viewsDir'       => APP_PATH . '/views/',
         'pluginsDir'     => APP_PATH . '/plugins/',
         'libraryDir'     => APP_PATH . '/library/',
-        'vendorDir'       => APP_PATH . '/vendor/',
+        'vendorDir'      => APP_PATH . '/vendor/',
+        'validationDir'  => APP_PATH . '/validation/',
         'cacheDir'       => BASE_PATH . '/cache/',
 
         // This allows the baseUri to be understand project paths that are not in the root directory
