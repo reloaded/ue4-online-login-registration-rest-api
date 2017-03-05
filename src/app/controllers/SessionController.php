@@ -18,6 +18,15 @@ use Reloaded\UnrealEngine4\Models\Players;
 class SessionController extends ControllerBase
 {
 
+    /**
+     * Registers a new player account.
+     *
+     * Takes a JSON structure from the HTTP request body, decodes it as a RegistrationRequest object and creates a
+     * new player if the request is valid.
+     *
+     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface
+     * @see LoginRequest
+     */
     public function registerAction()
     {
         try
@@ -99,6 +108,5 @@ class SessionController extends ControllerBase
     {
 
     }
-
 }
 
