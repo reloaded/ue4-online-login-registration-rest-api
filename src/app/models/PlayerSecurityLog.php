@@ -1,6 +1,6 @@
 <?php
 
-namespace Reloaded\UnrealEngine4\Models;
+namespace App\Models;
 
 use Ramsey\Uuid\Uuid;
 

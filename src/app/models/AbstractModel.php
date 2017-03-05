@@ -4,7 +4,7 @@
  * @date 3/3/2017 7:31 PM
  */
 
-namespace Reloaded\UnrealEngine4\Models;
+namespace App\Models;
 
 
 use Phalcon\Mvc\Model;

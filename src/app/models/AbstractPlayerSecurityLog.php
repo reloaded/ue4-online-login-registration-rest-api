@@ -1,6 +1,6 @@
 <?php
 
-namespace Reloaded\UnrealEngine4\Models;
+namespace App\Models;
 
 abstract class AbstractPlayerSecurityLog extends AbstractModel
 {
@@ -191,7 +191,7 @@ abstract class AbstractPlayerSecurityLog extends AbstractModel
     public function initialize()
     {
         $this->setSchema("ue4");
-        $this->belongsTo('PlayerId', 'Reloaded\UnrealEngine4\Models\\Players', 'Id', ['alias' => 'Players']);
+        $this->belongsTo('PlayerId', 'App\Models\\Players', 'Id', ['alias' => 'Players']);
     }
 
     /**

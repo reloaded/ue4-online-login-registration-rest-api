@@ -1,6 +1,6 @@
 <?php
 
-namespace Reloaded\UnrealEngine4\Models;
+namespace App\Models;
 
 use App\Models\Validation\Players as PlayersValidation;
 use Ramsey\Uuid\Uuid;

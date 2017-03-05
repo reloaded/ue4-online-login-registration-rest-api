@@ -29,7 +29,7 @@ class LoaderConfig
         $loader->registerNamespaces(
             [
                 'Reloaded\\UnrealEngine4\\Web\\Controllers' => $di->getShared("config")->application->controllersDir,
-                'Reloaded\\UnrealEngine4\\Models' => $di->getShared("config")->application->modelsDir,
+                'App\\Models' => $di->getShared("config")->application->modelsDir,
                 'App\\Library' => $di->getShared("config")->application->libraryDir,
                 'App\\Validation' => $di->getShared("config")->application->validationDir
 

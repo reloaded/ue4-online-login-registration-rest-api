@@ -1,6 +1,6 @@
 <?php
 
-namespace Reloaded\UnrealEngine4\Models;
+namespace App\Models;
 
 abstract class AbstractPlayers extends AbstractModel
 {
@@ -192,9 +192,9 @@ abstract class AbstractPlayers extends AbstractModel
     public function initialize()
     {
         $this->setSchema("ue4");
-        $this->hasMany('Id', 'Reloaded\UnrealEngine4\Models\PlayerAccountRecovery', 'PlayerId', ['alias' => 'PlayerAccountRecovery']);
-        $this->hasMany('Id', 'Reloaded\UnrealEngine4\Models\PlayerSecurityLog', 'PlayerId', ['alias' => 'PlayerSecurityLog']);
-        $this->hasMany('Id', 'Reloaded\UnrealEngine4\Models\PlayerSessions', 'PlayerId', ['alias' => 'PlayerSessions']);
+        $this->hasMany('Id', 'App\Models\PlayerAccountRecovery', 'PlayerId', ['alias' => 'PlayerAccountRecovery']);
+        $this->hasMany('Id', 'App\Models\PlayerSecurityLog', 'PlayerId', ['alias' => 'PlayerSecurityLog']);
+        $this->hasMany('Id', 'App\Models\PlayerSessions', 'PlayerId', ['alias' => 'PlayerSessions']);
     }
 
     /**

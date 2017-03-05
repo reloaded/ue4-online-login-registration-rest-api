@@ -7,13 +7,13 @@
 namespace App\Library\Requests\Validation;
 
 
-use App\Library\Requests\LoginRequest;
+use App\Library\Requests\Registration as RegistrationRequest;
 use Phalcon\Validation;
 use Phalcon\Validation\Message\Group;
 use Phalcon\Validation\Validator\Confirmation;
 use Phalcon\Validation\Validator\Regex;
 use Phalcon\Validation\Validator\StringLength;
-use Reloaded\UnrealEngine4\Models\Players;
+use App\Models\Players;
 
 class Registration extends Validation
 {
@@ -76,10 +76,10 @@ class Registration extends Validation
      * Executed after validation
      *
      * @param array $data
-     * @param LoginRequest $entity
+     * @param RegistrationRequest $entity
      * @param Group $messages
      */
-    public function afterValidation($data, $entity, $messages)
+    public function afterValidation($data, RegistrationRequest $entity, $messages)
     {
         $emailRegistered = Players::findFirst([
             'conditions' => 'Email = ?1',

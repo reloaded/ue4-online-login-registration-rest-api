@@ -13,7 +13,7 @@ use App\Library\Net\Responses\ValidationFaultResponse;
 use App\Library\Requests\Registration as RegistrationRequest;
 use App\Library\Requests\Validation\Registration as RegistrationRequestValidation;
 use Ramsey\Uuid\Uuid;
-use Reloaded\UnrealEngine4\Models\Players;
+use App\Models\Players;
 
 class SessionController extends ControllerBase
 {
@@ -24,7 +24,7 @@ class SessionController extends ControllerBase
      * new player if the request is valid.
      *
      * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface
-     * @see LoginRequest
+     * @see RegistrationRequest
      */
     public function registerAction()
     {
