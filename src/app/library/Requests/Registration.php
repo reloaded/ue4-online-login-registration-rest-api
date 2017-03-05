@@ -7,7 +7,7 @@
 namespace App\Library\Requests;
 
 
-class RegistrationRequest
+class Registration
 {
     /** @var string */
     public $Email;

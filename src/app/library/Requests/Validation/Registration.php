@@ -4,9 +4,10 @@
  * @date 3/3/2017 9:40 AM
  */
 
-namespace App\Library\Requests;
+namespace App\Library\Requests\Validation;
 
 
+use App\Library\Requests\LoginRequest;
 use Phalcon\Validation;
 use Phalcon\Validation\Message\Group;
 use Phalcon\Validation\Validator\Confirmation;
@@ -14,7 +15,7 @@ use Phalcon\Validation\Validator\Regex;
 use Phalcon\Validation\Validator\StringLength;
 use Reloaded\UnrealEngine4\Models\Players;
 
-class RegistrationRequestValidator extends Validation
+class Registration extends Validation
 {
     public function initialize()
     {

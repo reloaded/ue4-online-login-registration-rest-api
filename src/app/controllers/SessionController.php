@@ -10,8 +10,8 @@ use App\Library\Net\HttpStatusCode;
 use App\Library\Net\Responses\DataObjectResponse;
 use App\Library\Net\Responses\FaultResponse;
 use App\Library\Net\Responses\ValidationFaultResponse;
-use App\Library\Requests\RegistrationRequest;
-use App\Library\Requests\RegistrationRequestValidator;
+use App\Library\Requests\Registration as RegistrationRequest;
+use App\Library\Requests\Validation\Registration as RegistrationRequestValidation;
 use Ramsey\Uuid\Uuid;
 use Reloaded\UnrealEngine4\Models\Players;
 
@@ -35,7 +35,7 @@ class SessionController extends ControllerBase
             /** @var $registrationRequest RegistrationRequest */
             $registrationRequest = $this->mapper->map($this->request->getJsonRawBody(), new RegistrationRequest());
 
-            $requestValidation = new RegistrationRequestValidator();
+            $requestValidation = new RegistrationRequestValidation();
             $requestErrors = $requestValidation->validate(null, $registrationRequest);
 
             if(count($requestErrors))
