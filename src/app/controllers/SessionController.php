@@ -17,7 +17,6 @@ use Reloaded\UnrealEngine4\Models\Players;
 
 class SessionController extends ControllerBase
 {
-
     /**
      * Registers a new player account.
      *
@@ -37,7 +36,7 @@ class SessionController extends ControllerBase
             $registrationRequest = $this->mapper->map($this->request->getJsonRawBody(), new RegistrationRequest());
 
             $requestValidation = new RegistrationRequestValidator();
-            $requestErrors = $requestValidation->validate($registrationRequest);
+            $requestErrors = $requestValidation->validate(null, $registrationRequest);
 
             if(count($requestErrors))
             {

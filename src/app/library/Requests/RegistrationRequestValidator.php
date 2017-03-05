@@ -74,8 +74,8 @@ class RegistrationRequestValidator extends Validation
     /**
      * Executed after validation
      *
-     * @param RegistrationRequest $data
-     * @param object $entity
+     * @param array $data
+     * @param LoginRequest $entity
      * @param Group $messages
      */
     public function afterValidation($data, $entity, $messages)
@@ -83,7 +83,7 @@ class RegistrationRequestValidator extends Validation
         $emailRegistered = Players::findFirst([
             'conditions' => 'Email = ?1',
             'bind' => [
-                1 => $data->Email
+                1 => $entity->Email
             ]
         ]);
 
