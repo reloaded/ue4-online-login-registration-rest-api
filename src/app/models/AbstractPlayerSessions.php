@@ -2,7 +2,7 @@
 
 namespace Reloaded\UnrealEngine4\Models;
 
-abstract class AbstractPlayerSessions extends \Phalcon\Mvc\Model
+abstract class AbstractPlayerSessions extends AbstractModel
 {
 
     /**
@@ -166,6 +166,16 @@ abstract class AbstractPlayerSessions extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns table name mapped in the model.
+     *
+     * @return string
+     */
+    public function getSource()
+    {
+        return 'player_sessions';
+    }
+
+    /**
      * Allows to query a set of records that match the specified conditions
      *
      * @param mixed $parameters
@@ -185,16 +195,6 @@ abstract class AbstractPlayerSessions extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
-    }
-
-    /**
-     * Returns table name mapped in the model.
-     *
-     * @return string
-     */
-    public function getSource()
-    {
-        return 'player_sessions';
     }
 
 }
