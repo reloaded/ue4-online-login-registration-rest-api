@@ -46,6 +46,11 @@ class RouteConfig
             'action' => 'logout'
         ]);
 
+        $router->addPatch("/session/{sessionId:([{(]?[0-9A-Fa-f]{8}[-]?([0-9A-Fa-f]{4}[-]?){3}[0-9A-Fa-f]{12}[)}]?)}/heartbeat", [
+            'controller' => 'session',
+            'action' => 'heartbeat'
+        ]);
+
         $router->handle();
     }
 }

@@ -264,7 +264,61 @@ class SessionController extends ControllerBase
 
     public function heartbeatAction()
     {
+        try
+        {
+            $sessionId = Uuid::fromString($this->dispatcher->getParam('sessionId'));
 
+            $session = PlayerSessions::findFirst([
+                'conditions' => 'SessionId = ?1',
+                'bind' => [
+                    1 => $sessionId->getBytes()
+                ]
+            ]);
+
+            if($session)
+            {
+                $this->db->begin();
+
+                $sessionExpiration = new \DateTime($this->di->getShared('config')->application->sessionDuration);
+
+                $updates = [
+                    'Expiration' => $sessionExpiration->format('Y-m-d H:i:s')
+                ];
+
+                if(!$session->save($updates))
+                {
+                    $this->db->rollback();
+
+                    $fault = new FaultResponse('There was an error while attempting to extend the session.', HttpStatusCode::InternalServerError);
+
+                    return $this->response
+                        ->setStatusCode(HttpStatusCode::InternalServerError)
+                        ->setJsonContent($fault);
+                }
+
+                $responseData = (object) [
+                    'SessionId' => $session->getSessionId(),
+                    'Expiration' => $session->getExpiration()
+                ];
+
+                $this->db->commit();
+            }
+
+            return $this->response
+                ->setStatusCode(HttpStatusCode::OK)
+                ->setJsonContent(new DataObjectResponse($responseData, HttpStatusCode::OK));
+        }
+        catch(\Exception $ex)
+        {
+            $this->db->rollback();
+
+            return $this->response
+                ->setStatusCode(HttpStatusCode::InternalServerError)
+                ->setJsonContent(new FaultResponse(
+                    'There was an unexpected error while authenticating.',
+                    HttpStatusCode::InternalServerError
+                ));
+        }
     }
 }
 
