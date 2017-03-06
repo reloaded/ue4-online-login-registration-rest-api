@@ -41,7 +41,11 @@ class RouteConfig
             'action' => 'login'
         ]);
 
-        $router->handle();
+        $router->addDelete("/session/{sessionId:([{(]?[0-9A-Fa-f]{8}[-]?([0-9A-Fa-f]{4}[-]?){3}[0-9A-Fa-f]{12}[)}]?)}", [
+            'controller' => 'session',
+            'action' => 'logout'
+        ]);
 
+        $router->handle();
     }
 }

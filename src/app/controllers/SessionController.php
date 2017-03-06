@@ -209,9 +209,57 @@ class SessionController extends ControllerBase
         }
     }
 
+    /**
+     * Deletes a player's session.
+     *
+     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface
+     */
     public function logoutAction()
     {
+        try
+        {
+            $sessionId = Uuid::fromString($this->dispatcher->getParam('sessionId'));
 
+            $session = PlayerSessions::findFirst([
+                'conditions' => 'SessionId = ?1',
+                'bind' => [
+                    1 => $sessionId->getBytes()
+                ]
+            ]);
+
+            if($session)
+            {
+                $this->db->begin();
+
+                if(!$session->delete())
+                {
+                    $this->db->rollback();
+
+                    $fault = new FaultResponse('There was an error while attempting to log out.', HttpStatusCode::InternalServerError);
+
+                    return $this->response
+                        ->setStatusCode(HttpStatusCode::InternalServerError)
+                        ->setJsonContent($fault);
+                }
+
+                $this->db->commit();
+            }
+
+            return $this->response
+                ->setStatusCode(HttpStatusCode::OK)
+                ->setJsonContent(new DataObjectResponse(null, HttpStatusCode::OK));
+        }
+        catch(\Exception $ex)
+        {
+            $this->db->rollback();
+
+            return $this->response
+                ->setStatusCode(HttpStatusCode::InternalServerError)
+                ->setJsonContent(new FaultResponse(
+                    'There was an unexpected error while authenticating.',
+                    HttpStatusCode::InternalServerError
+                ));
+        }
     }
 
     public function heartbeatAction()
