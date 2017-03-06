@@ -271,6 +271,8 @@ class SessionController extends ControllerBase
     {
         try
         {
+            $this->db->begin();
+
             $sessionId = Uuid::fromString($this->dispatcher->getParam('sessionId'));
 
             $session = PlayerSessions::findFirst([
@@ -280,34 +282,41 @@ class SessionController extends ControllerBase
                 ]
             ]);
 
-            if($session)
+            if(!$session)
             {
-                $this->db->begin();
+                $this->db->rollback();
 
-                $sessionExpiration = new \DateTime($this->di->getShared('config')->application->sessionDuration);
-
-                $updates = [
-                    'Expiration' => $sessionExpiration->format('Y-m-d H:i:s')
-                ];
-
-                if(!$session->save($updates))
-                {
-                    $this->db->rollback();
-
-                    $fault = new FaultResponse('There was an error while attempting to extend the session.', HttpStatusCode::InternalServerError);
-
-                    return $this->response
-                        ->setStatusCode(HttpStatusCode::InternalServerError)
-                        ->setJsonContent($fault);
-                }
-
-                $responseData = (object) [
-                    'SessionId' => $session->getSessionId(),
-                    'Expiration' => $session->getExpiration()
-                ];
-
-                $this->db->commit();
+                return $this->response
+                    ->setStatusCode(HttpStatusCode::NotFound)
+                    ->setJsonContent(new FaultResponse(
+                        'Session not found.',
+                        HttpStatusCode::NotFound
+                    ));
             }
+
+            $sessionExpiration = new \DateTime($this->di->getShared('config')->application->sessionDuration);
+
+            $updates = [
+                'Expiration' => $sessionExpiration->format('Y-m-d H:i:s')
+            ];
+
+            if(!$session->save($updates))
+            {
+                $this->db->rollback();
+
+                $fault = new FaultResponse('There was an error while attempting to extend the session.', HttpStatusCode::InternalServerError);
+
+                return $this->response
+                    ->setStatusCode(HttpStatusCode::InternalServerError)
+                    ->setJsonContent($fault);
+            }
+
+            $this->db->commit();
+
+            $responseData = (object) [
+                'SessionId' => $session->getSessionId(),
+                'Expiration' => $session->getExpiration()
+            ];
 
             return $this->response
                 ->setStatusCode(HttpStatusCode::OK)
