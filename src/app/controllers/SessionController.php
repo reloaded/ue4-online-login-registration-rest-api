@@ -262,6 +262,11 @@ class SessionController extends ControllerBase
         }
     }
 
+    /**
+     * Extends the expiration of a player's session.
+     *
+     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface
+     */
     public function heartbeatAction()
     {
         try
