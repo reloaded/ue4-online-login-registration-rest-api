@@ -21,6 +21,7 @@ Subscribe and Share :)
 1. Install HeidiSQL https://www.heidisql.com/
 1. Download Phalcon and put in PHP ext/ folder https://phalconphp.com/en/download/
 1. Update php.ini, load php_phalcon.dll
+1. Update php.ini, activate/install php_gmp.dll extension.
 1. Install composer https://getcomposer.org/
 1. Clone this repo or download and extract it.
 1. Setup Apache/Nginx Virtual Host.
