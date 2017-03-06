@@ -31,6 +31,10 @@ return new \Phalcon\Config([
         'vendorDir'      => APP_PATH . '/vendor/',
         'validationDir'  => APP_PATH . '/validation/',
         'cacheDir'       => BASE_PATH . '/cache/',
+        'logsDir'        => BASE_PATH . '/logs/',
+
+        // A 'noreply' email address that is used as the "From" email header for various emails sent by the API.
+        'noReplyEmail' => 'noreply@ue4.localhost',
 
         // This allows the baseUri to be understand project paths that are not in the root directory
         // of the webpspace.  This will break if the public/index.php entry point is moved or
@@ -43,6 +47,17 @@ return new \Phalcon\Config([
         // Valid values are supported by PHP's Date and Time Formats
         //
         // @see http://php.net/manual/en/datetime.formats.php
-        'sessionDuration' => '+1 hour'
+        'sessionDuration' => '+1 hour',
+
+        // Name of your product/game, this is public facing in some areas, i.e. it's included in emails.
+        'siteName'      => 'UE4 REST APIs',
+
+        // The duration of time before an account recovery code is invalid after emailed. These codes are
+        // used to activate accounts, reset passwords, etc.
+        //
+        // Valid values are supported by PHP's Date and Time Formats
+        //
+        // @see http://php.net/manual/en/datetime.formats.php
+        'accountRecoveryDuration' => '+15 minutes'
     ]
 ]);

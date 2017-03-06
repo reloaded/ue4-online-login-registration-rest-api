@@ -19,6 +19,8 @@
     "netresearch/jsonmapper": "^1.1",
     "ramsey/uuid": "^3.5",
     "moontoast/math": "^1.1",
-    "rlanvin/php-ip": "^1.0"
+    "rlanvin/php-ip": "^1.0",
+    "zendframework/zend-mail": "^2.7",
+    "zendframework/zend-math": "^3.0"
   }
 }

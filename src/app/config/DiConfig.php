@@ -15,6 +15,8 @@ use Phalcon\Mvc\Model\Metadata\Memory as MetaDataAdapter;
 use Phalcon\Mvc\Url as UrlResolver;
 use Phalcon\Mvc\View;
 use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
+use Zend\Mail\Transport\File as FileTransport;
+use Zend\Mail\Transport\FileOptions;
 
 class DiConfig
 {
@@ -105,8 +107,27 @@ class DiConfig
             return $dispatcher;
         });
 
+        /**
+         * JSONMapper is used to map a JSON structure to a concrete object type.
+         *
+         * @see https://github.com/cweiske/jsonmapper
+         */
         $di->setShared('jsonMapper', function() {
             return new \JsonMapper();
+        });
+
+        /**
+         * Mail Transport
+         */
+        $di->setShared('mailTransport', function() use($di) {
+            $transport = new FileTransport();
+            $options = new FileOptions([
+                'path' => $di->getShared('config')->application->logsDir
+            ]);
+
+            $transport->setOptions($options);
+
+            return $transport;
         });
 
         return $di;
