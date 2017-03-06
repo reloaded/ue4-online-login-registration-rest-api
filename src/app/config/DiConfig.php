@@ -11,10 +11,10 @@ require_once 'AppConfig.php';
 use Phalcon\Di\FactoryDefault;
 use Phalcon\DiInterface;
 use Phalcon\Mvc\Dispatcher;
+use Phalcon\Mvc\Model\Metadata\Memory as MetaDataAdapter;
 use Phalcon\Mvc\Url as UrlResolver;
 use Phalcon\Mvc\View;
 use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
-use Phalcon\Mvc\Model\Metadata\Memory as MetaDataAdapter;
 
 class DiConfig
 {
@@ -80,6 +80,7 @@ class DiConfig
                 unset($params['charset']);
             }
 
+            /** @var \Phalcon\Db\Adapter $connection */
             $connection = new $class($params);
 
             return $connection;
