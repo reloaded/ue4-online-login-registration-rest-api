@@ -15,9 +15,12 @@ use App\Library\Requests\Login as LoginRequest;
 use App\Library\Requests\Registration as RegistrationRequest;
 use App\Library\Requests\Validation\Login;
 use App\Library\Requests\Validation\Registration as RegistrationRequestValidation;
+use App\Models\PlayerAccountRecovery;
 use App\Models\Players;
 use App\Models\PlayerSessions;
 use Ramsey\Uuid\Uuid;
+use Zend\Mail\Message;
+use Zend\Math\Rand;
 
 class SessionController extends ControllerBase
 {
@@ -37,7 +40,7 @@ class SessionController extends ControllerBase
             $this->db->begin();
 
             /** @var $registrationRequest RegistrationRequest */
-            $registrationRequest = $this->mapper->map($this->request->getJsonRawBody(), new RegistrationRequest());
+            $registrationRequest = $this->_mapper->map($this->request->getJsonRawBody(), new RegistrationRequest());
 
             $requestValidation = new RegistrationRequestValidation();
             $requestErrors = $requestValidation->validate(null, $registrationRequest);
@@ -51,6 +54,8 @@ class SessionController extends ControllerBase
                     ->setStatusCode(HttpStatusCode::BadRequest)
                     ->setJsonContent($validationFault);
             }
+
+            #region Create Player
 
             $guid = Uuid::uuid4();
 
@@ -75,7 +80,53 @@ class SessionController extends ControllerBase
                     ->setJsonContent($validationFault);
             }
 
+            #endregion
+
+            #region Create Account Recovery
+
+            $accountRecoveryDuration = new \DateTime($this->_appSettings->accountRecoveryDuration);
+            $accountRecovery = new PlayerAccountRecovery([
+                'PlayerId' => $player->getId(),
+                'Code' => Rand::getString(10),
+                'Expiration' => $accountRecoveryDuration->format('Y-m-d H:i:s'),
+                'GeneratedOn' => (new \DateTime())->format('Y-m-d H:i:s'),
+                'Type' => 'Activation'
+            ]);
+
+            if(!$accountRecovery->save())
+            {
+                $this->db->rollback();
+
+                $faultResponse = new FaultResponse(
+                    'There was an error with account activation.',
+                    HttpStatusCode::InternalServerError
+                );
+
+                return $this->response
+                    ->setStatusCode(HttpStatusCode::InternalServerError)
+                    ->setJsonContent($faultResponse);
+            }
+
+            #endregion
+
             $this->db->commit();
+
+            #region Send Account Activation Email
+
+            $activationMessage = new Message();
+            $activationMessage
+                ->addTo($player->getEmail())
+                ->addFrom($this->di->getShared('config')->application->noReplyEmail)
+                ->setSubject(sprintf(
+                    'Your new account with %s',
+                    $this->di->getShared('config')->application->siteName
+                ))
+                ->setBody(
+                    sprintf('Your activation code is: %s', $accountRecovery->getCode())
+                );
+            $this->_mailTransport->send($activationMessage);
+
+            #endregion
 
             $responseData = (object) [
                 'Id' => $player->getId(),
@@ -115,7 +166,7 @@ class SessionController extends ControllerBase
             $this->db->begin();
 
             /** @var $loginRequest LoginRequest */
-            $loginRequest = $this->mapper->map($this->request->getJsonRawBody(), new LoginRequest());
+            $loginRequest = $this->_mapper->map($this->request->getJsonRawBody(), new LoginRequest());
 
             $requestValidation = new Login();
             $requestErrors = $requestValidation->validate(null, $loginRequest);
@@ -148,6 +199,18 @@ class SessionController extends ControllerBase
                 return $this->response
                     ->setStatusCode(HttpStatusCode::BadRequest)
                     ->setJsonContent($validationFault);
+            }
+
+            if(!$player->getIsActivated())
+            {
+                $faultResponse = new FaultResponse(
+                    'You must activate your account before logging in.',
+                    HttpStatusCode::Unauthorized
+                );
+
+                return $this->response
+                    ->setStatusCode(HttpStatusCode::Unauthorized)
+                    ->setJsonContent($faultResponse);
             }
 
             $playerSession = PlayerSessions::findFirst([

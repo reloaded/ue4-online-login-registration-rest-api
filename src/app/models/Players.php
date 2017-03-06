@@ -30,6 +30,31 @@ class Players extends AbstractPlayers
         return Uuid::fromBytes($this->Id)->toString();
     }
 
+    /**
+     * Method to set the value of field IsActivated
+     *
+     * @param bool $IsActivated
+     * @return $this
+     */
+    public function setIsActivated($IsActivated)
+    {
+        $this->IsActivated = $IsActivated ? 1 : 0;
+
+        return $this;
+    }
+
+    /**
+     * Returns the value of field IsActivated
+     *
+     * @return bool
+     */
+    public function getIsActivated()
+    {
+        return (int) $this->IsActivated === 1;
+    }
+
+
+
 
 //    public function beforeSave()
 //    {

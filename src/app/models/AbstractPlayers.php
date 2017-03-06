@@ -49,6 +49,13 @@ abstract class AbstractPlayers extends AbstractModel
     protected $LastName;
 
     /**
+     *
+     * @var string
+     * @Column(type="string", length=1, nullable=false)
+     */
+    protected $IsActivated;
+
+    /**
      * Method to set the value of field Id
      *
      * @param string $Id
@@ -127,6 +134,19 @@ abstract class AbstractPlayers extends AbstractModel
     }
 
     /**
+     * Method to set the value of field IsActivated
+     *
+     * @param string $IsActivated
+     * @return $this
+     */
+    public function setIsActivated($IsActivated)
+    {
+        $this->IsActivated = $IsActivated;
+
+        return $this;
+    }
+
+    /**
      * Returns the value of field Id
      *
      * @return string
@@ -184,6 +204,16 @@ abstract class AbstractPlayers extends AbstractModel
     public function getLastName()
     {
         return $this->LastName;
+    }
+
+    /**
+     * Returns the value of field IsActivated
+     *
+     * @return string
+     */
+    public function getIsActivated()
+    {
+        return $this->IsActivated;
     }
 
     /**

@@ -7,14 +7,23 @@
 namespace Reloaded\UnrealEngine4\Web\Controllers;
 
 use Phalcon\Mvc\Controller;
+use Zend\Mail\Transport\TransportInterface;
 
 class ControllerBase extends Controller
 {
     /** @var \JsonMapper */
-    protected $mapper;
+    protected $_mapper;
+
+    /** @var TransportInterface */
+    protected $_mailTransport;
+
+    /** @var \Phalcon\Config|mixed */
+    protected $_appSettings;
 
     public function initialize()
     {
-        $this->mapper = $this->di->getShared('jsonMapper');
+        $this->_mapper = $this->di->getShared('jsonMapper');
+        $this->_mailTransport = $this->di->getShared('mailTransport');
+        $this->_appSettings = $this->di->getShared('config')->application;
     }
 }
