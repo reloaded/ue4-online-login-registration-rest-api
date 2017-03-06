@@ -1,8 +1,8 @@
 #
 # Phalcon
 #
-/cache/
-/config/development/
+cache/
+logs/
 
 
 

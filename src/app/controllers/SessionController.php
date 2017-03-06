@@ -102,6 +102,12 @@ class SessionController extends ControllerBase
         }
     }
 
+    /**
+     * Authenticates an existing player and create a new session. If there is an existing session for the player its
+     * invalidated and a new one is created.
+     *
+     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface
+     */
     public function loginAction()
     {
         try
