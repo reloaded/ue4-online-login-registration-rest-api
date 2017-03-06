@@ -10,7 +10,8 @@ The following features are provided out of the box:
  - Player logout.
  - Simple contact information like first and last name is collected during registration.
  - Account password recovery using email.
- - Authentication sessions.
+ - Authenticated player sessions.
+ - HTTPS/SSL enabled REST API.
   
 Check out the [YouTube playlist](https://www.youtube.com/playlist?list=PLaVz4AmlosnFixCPTJNsLxQpiGSijIOXy). Please Like,
 Subscribe and Share :) 
@@ -66,10 +67,16 @@ Phalcon models in the `beforeSave()`, `afterSave()` and `afterFetch()` Phalcon m
 - If you have an issue with generating UUID/GUID values in the PHP REST API see the Requirements section of the 
 PHP composer package [ramsey/uuid](https://github.com/ramsey/uuid) being used to generate/parse GUID/UUID.
 
+# Libraries in use
+- [JsonMapper](https://github.com/cweiske/jsonmapper)
+- [ZendFramework Mail](https://zendframework.github.io/zend-mail/intro/)
+- [IPv4/IPv6](https://github.com/rlanvin/php-ip)
+- [GUID/UUID](https://github.com/ramsey/uuid)
+- [Mathematics library](https://github.com/moontoast/math) (used by ramsey/uuid library)
+
 # References
 - [Using GUIDs with MySQL MariaDB](https://mariadb.com/kb/en/mariadb/guiduuid-performance/)
 - [Storing IPs in MySQL MariaDB](https://dev.mysql.com/doc/refman/5.6/en/miscellaneous-functions.html#function_inet6-aton)
 - [Configuring Apache for Phalcon](https://docs.phalconphp.com/en/latest/reference/apache.html)
 - [Configuring Nginx for Phalcon](https://docs.phalconphp.com/en/latest/reference/nginx.html)
 - [Configuring PhpStorm IDE stubs for Phalcon](https://phalconphp.com/en/download/stubs)
-- [JsonMapper library](https://github.com/cweiske/jsonmapper)
