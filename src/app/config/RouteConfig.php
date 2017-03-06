@@ -36,6 +36,11 @@ class RouteConfig
             'action' => 'register'
         ]);
 
+        $router->addPost("/session/login", [
+            'controller' => 'session',
+            'action' => 'login'
+        ]);
+
         $router->handle();
 
     }

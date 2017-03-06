@@ -7,23 +7,47 @@ use Ramsey\Uuid\Uuid;
 
 class Players extends AbstractPlayers
 {
-    public function beforeSave()
+    /**
+     * Method to set the value of field Id
+     *
+     * @param string $Id
+     * @return $this
+     */
+    public function setId($Id)
     {
-        // Convert the GUID string into binary
-        $this->Id = hex2bin(str_replace('-', '', $this->Id));
+        $this->Id = hex2bin(str_replace('-', '', $Id));
+
+        return $this;
     }
 
-    public function afterFetch()
+    /**
+     * Returns the value of field Id
+     *
+     * @return string
+     */
+    public function getId()
     {
-        // Convert the binary GUID to a GUID string
-        $this->Id = Uuid::fromBytes($this->Id)->toString();
+        return Uuid::fromBytes($this->Id)->toString();
     }
 
-    public function afterSave()
-    {
-        // Convert the binary GUID to a GUID string
-        $this->Id = Uuid::fromBytes($this->Id)->toString();
-    }
+
+//    public function beforeSave()
+//    {
+//        // Convert the GUID string into binary
+//        $this->Id = hex2bin(str_replace('-', '', $this->Id));
+//    }
+//
+//    public function afterFetch()
+//    {
+//        // Convert the binary GUID to a GUID string
+//        $this->Id = Uuid::fromBytes($this->Id)->toString();
+//    }
+//
+//    public function afterSave()
+//    {
+//        // Convert the binary GUID to a GUID string
+//        $this->Id = Uuid::fromBytes($this->Id)->toString();
+//    }
 
     public function validation()
     {

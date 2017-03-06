@@ -36,5 +36,13 @@ return new \Phalcon\Config([
         // of the webpspace.  This will break if the public/index.php entry point is moved or
         // possibly if the web server rewrite rules are changed. This can also be set to a static path.
         'baseUri'        => preg_replace('/public([\/\\\\])index.php$/', '', $_SERVER["PHP_SELF"]),
+
+        // The duration of the session before it times out after login. For requests that extend the player's session,
+        // their session is extended by this amount or until the session is extended again.
+        //
+        // Valid values are supported by PHP's Date and Time Formats
+        //
+        // @see http://php.net/manual/en/datetime.formats.php
+        'sessionDuration' => '+1 hour'
     ]
 ]);

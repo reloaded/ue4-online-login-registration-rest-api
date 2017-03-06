@@ -10,10 +10,14 @@ use App\Library\Net\HttpStatusCode;
 use App\Library\Net\Responses\DataObjectResponse;
 use App\Library\Net\Responses\FaultResponse;
 use App\Library\Net\Responses\ValidationFaultResponse;
+use App\Library\Net\Responses\ValidationFieldError;
+use App\Library\Requests\Login as LoginRequest;
 use App\Library\Requests\Registration as RegistrationRequest;
+use App\Library\Requests\Validation\Login;
 use App\Library\Requests\Validation\Registration as RegistrationRequestValidation;
-use Ramsey\Uuid\Uuid;
 use App\Models\Players;
+use App\Models\PlayerSessions;
+use Ramsey\Uuid\Uuid;
 
 class SessionController extends ControllerBase
 {
@@ -51,12 +55,12 @@ class SessionController extends ControllerBase
             $guid = Uuid::uuid4();
 
             $player = new Players([
-                "Id" => $guid->toString(),
-                "FirstName" => $registrationRequest->FirstName,
-                "LastName" => $registrationRequest->LastName,
-                "Email" => $registrationRequest->Email,
-                "InGameName" => $registrationRequest->InGameName,
-                "Password" => password_hash($registrationRequest->Password, PASSWORD_DEFAULT)
+                'Id' => $guid->toString(),
+                'FirstName' => $registrationRequest->FirstName,
+                'LastName' => $registrationRequest->LastName,
+                'Email' => $registrationRequest->Email,
+                'InGameName' => $registrationRequest->InGameName,
+                'Password' => password_hash($registrationRequest->Password, PASSWORD_DEFAULT)
             ]);
 
             if(!$player->save())
@@ -74,11 +78,11 @@ class SessionController extends ControllerBase
             $this->db->commit();
 
             $responseData = (object) [
-                "Id" => $player->getId(),
-                "FirstName" => $registrationRequest->FirstName,
-                "LastName" => $registrationRequest->LastName,
-                "Email" => $registrationRequest->Email,
-                "InGameName" => $registrationRequest->InGameName
+                'Id' => $player->getId(),
+                'FirstName' => $registrationRequest->FirstName,
+                'LastName' => $registrationRequest->LastName,
+                'Email' => $registrationRequest->Email,
+                'InGameName' => $registrationRequest->InGameName
             ];
 
             return $this->response
@@ -100,10 +104,111 @@ class SessionController extends ControllerBase
 
     public function loginAction()
     {
+        try
+        {
+            $this->db->begin();
 
+            /** @var $loginRequest LoginRequest */
+            $loginRequest = $this->mapper->map($this->request->getJsonRawBody(), new LoginRequest());
+
+            $requestValidation = new Login();
+            $requestErrors = $requestValidation->validate(null, $loginRequest);
+
+            if(count($requestErrors))
+            {
+                $validationFault = new ValidationFaultResponse(HttpStatusCode::BadRequest);
+                $validationFault->addPhalconValidationGroup($requestValidation->getMessages());
+
+                return $this->response
+                    ->setStatusCode(HttpStatusCode::BadRequest)
+                    ->setJsonContent($validationFault);
+            }
+
+            $player = Players::findFirst([
+                'conditions' => 'Email = ?1',
+                'bind' => [
+                    1 => $loginRequest->Email
+                ]
+            ]);
+
+            if(!$player || !password_verify($loginRequest->Password, $player->getPassword()))
+            {
+                $validationFault = new ValidationFaultResponse(HttpStatusCode::BadRequest);
+                $validationFault->addValidationErrors([new ValidationFieldError(
+                    'Email_Or_Password',
+                    'The email and password you entered does not match our records.'
+                )]);
+
+                return $this->response
+                    ->setStatusCode(HttpStatusCode::BadRequest)
+                    ->setJsonContent($validationFault);
+            }
+
+            $playerSession = PlayerSessions::findFirst([
+                'conditions' => 'PlayerId = ?1',
+                'bind' => [
+                    1 => Uuid::fromString($player->getId())->getBytes()
+                ]
+            ]);
+
+            if(!$playerSession)
+            {
+                $playerSession = new PlayerSessions([
+                    'PlayerId' => $player->getId()
+                ]);
+            }
+
+            $sessionExpiration = new \DateTime($this->di->getShared('config')->application->sessionDuration);
+
+            $playerSession
+                ->setSessionId(Uuid::uuid4()->toString())
+                ->setExpiration($sessionExpiration->format('Y-m-d H:i:s'))
+                ->setCreated((new \DateTime())->format('Y-m-d H:i:s'))
+                ->setRemoteIp($this->request->getClientAddress());
+
+
+            if(!$playerSession->save())
+            {
+                $this->db->rollback();
+
+                $validationFault = new ValidationFaultResponse(HttpStatusCode::BadRequest);
+                $validationFault->addPhalconModelMessages($playerSession->getMessages());
+
+                return $this->response
+                    ->setStatusCode(HttpStatusCode::BadRequest)
+                    ->setJsonContent($validationFault);
+            }
+
+            $this->db->commit();
+
+            $responseData = (object) [
+                'SessionId' => $playerSession->getSessionId(),
+                'Expiration' => $playerSession->getExpiration()
+            ];
+
+            return $this->response
+                ->setStatusCode(HttpStatusCode::Created)
+                ->setJsonContent(new DataObjectResponse($responseData, HttpStatusCode::Created));
+        }
+        catch(\Exception $ex)
+        {
+            $this->db->rollback();
+
+            return $this->response
+                ->setStatusCode(HttpStatusCode::InternalServerError)
+                ->setJsonContent(new FaultResponse(
+                    'There was an unexpected error while authenticating.',
+                    HttpStatusCode::InternalServerError
+                ));
+        }
     }
 
     public function logoutAction()
+    {
+
+    }
+
+    public function heartbeatAction()
     {
 
     }
