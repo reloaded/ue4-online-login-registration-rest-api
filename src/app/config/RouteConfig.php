@@ -31,13 +31,13 @@ class RouteConfig
             'action' => 'route404'
         ]);
 
-        $router->addPost("/session/register", [
-            'controller' => 'session',
+        $router->addPost("/account/register", [
+            'controller' => 'account',
             'action' => 'register'
         ]);
 
-        $router->addPost("/session/login", [
-            'controller' => 'session',
+        $router->addPost("/account/login", [
+            'controller' => 'account',
             'action' => 'login'
         ]);
 
