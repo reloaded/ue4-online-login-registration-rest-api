@@ -1,0 +1,74 @@
+<?php
+/**
+ * @author Jason Harris <1337reloaded@gmail.com>
+ * @date 3/6/2017 8:46 PM
+ */
+
+/** @type string $InGameName */
+/** @type string $ActivationCode */
+/** @type string $CodeExpiration */
+/** @type string $GeneratedOn */
+
+// If APP_PATH is not defined the template was opened directly in the browser, let's add some test data.
+if(!defined('APP_PATH'))
+{
+    $InGameName = 'Reloaded';
+    $ActivationCode = '006IR6ik6c';
+    $CodeExpiration = (new \DateTime('+1 hour'))->format('Y-m-d H:i:s');
+    $GeneratedOn = (new \DateTime('now'))->format('Y-m-d H:i:s');
+}
+
+$generatedDateTime = new \DateTime($GeneratedOn);
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Activate Account</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body style="margin: 0; padding: 0; font-family: Helvetica,Arial,sans-serif; font-size: 14px; color: #c6d4df">
+    <table align="center"
+           cellpadding="0"
+           cellspacing="0"
+           style="width: 538px; background-color: #17212e; padding: 10px; border-radius: 5px;">
+        <tbody>
+        <tr>
+            <td>
+                <p style="color: #d5d5d5; font-size: 20px;">Dear <?php echo $InGameName; ?>,</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p style="font-size: 16px; font-weight: bold;">
+                    Here is the activation code you need to login to account <?php echo $InGameName; ?>:
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                <div style="background: #315788; padding: 15px; border: 1px solid #75a6e6; border-radius: 2px;">
+                    <span style="color: #fff; font-size: 16px; font-weight: bold;">
+                        <?php echo strtoupper($ActivationCode); ?>
+                    </span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>
+                    This code will expire at <?php echo $CodeExpiration; ?>. After this code expires you may request
+                    a new one.
+                </p>
+                <p style="padding-top: 20px; font-size: 12px;">
+                    You are receiving this email because you or someone else signed up for an account at
+                    <?php echo $generatedDateTime->format('Y-m-d g:i A'); ?> with your email. If you did not
+                    register an account you may ignore this email.
+                </p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</body>
+</html>

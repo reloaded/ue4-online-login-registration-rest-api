@@ -6,6 +6,7 @@
 
 namespace Reloaded\UnrealEngine4\Web\Controllers;
 
+use App\Library\EmailMessages\AccountRecovery\ActivateTemplate;
 use App\Library\Net\HttpStatusCode;
 use App\Library\Net\Responses\DataObjectResponse;
 use App\Library\Net\Responses\FaultResponse;
@@ -21,6 +22,7 @@ use App\Models\PlayerSessions;
 use Ramsey\Uuid\Uuid;
 use Zend\Mail\Message;
 use Zend\Math\Rand;
+use Zend\Mime\Mime;
 
 class SessionController extends ControllerBase
 {
@@ -113,18 +115,7 @@ class SessionController extends ControllerBase
 
             #region Send Account Activation Email
 
-            $activationMessage = new Message();
-            $activationMessage
-                ->addTo($player->getEmail())
-                ->addFrom($this->di->getShared('config')->application->noReplyEmail)
-                ->setSubject(sprintf(
-                    'Your new account with %s',
-                    $this->di->getShared('config')->application->siteName
-                ))
-                ->setBody(
-                    sprintf('Your activation code is: %s', $accountRecovery->getCode())
-                );
-            $this->_mailTransport->send($activationMessage);
+            $this->_mailTransport->send($this->_createAccountActivationMessage($player, $accountRecovery));
 
             #endregion
 
@@ -142,7 +133,11 @@ class SessionController extends ControllerBase
         }
         catch(\Exception $ex)
         {
-            $this->db->rollback();
+            var_dump($ex);exit;
+            if($this->db->isUnderTransaction())
+            {
+                $this->db->rollback();
+            }
 
             return $this->response
                 ->setStatusCode(HttpStatusCode::InternalServerError)
@@ -396,6 +391,32 @@ class SessionController extends ControllerBase
                     HttpStatusCode::InternalServerError
                 ));
         }
+    }
+
+    private function _createAccountActivationMessage(Players $player, PlayerAccountRecovery $accountRecovery): Message
+    {
+        $emailTemplate = new ActivateTemplate($player, $accountRecovery);
+
+        $html = new \Zend\Mime\Part($emailTemplate->renderHtml());
+        $html->type = Mime::TYPE_HTML;
+        $html->charset = 'utf-8';
+        $html->encoding = Mime::ENCODING_QUOTEDPRINTABLE;
+
+        $body = new \Zend\Mime\Message();
+        $body->setParts([$html]);
+
+        $activationMessage = new Message();
+        $activationMessage
+            ->addTo($player->getEmail())
+            ->addFrom($this->di->getShared('config')->application->noReplyEmail)
+            ->setSubject(sprintf(
+                'Your new account with %s',
+                $this->di->getShared('config')->application->siteName
+            ))
+            ->setBody($body);
+
+        return $activationMessage;
+
     }
 }
 
