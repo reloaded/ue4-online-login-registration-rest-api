@@ -17,6 +17,7 @@ use Phalcon\Mvc\View;
 use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
 use Zend\Mail\Transport\File as FileTransport;
 use Zend\Mail\Transport\FileOptions;
+use Zend\Math\Rand;
 
 class DiConfig
 {
@@ -122,7 +123,14 @@ class DiConfig
         $di->setShared('mailTransport', function() use($di) {
             $transport = new FileTransport();
             $options = new FileOptions([
-                'path' => $di->getShared('config')->application->logsDir
+                'path' => $di->getShared('config')->application->logsDir,
+                'callback' => function() {
+                    return sprintf(
+                        'Message_%f_%s.mht',
+                        microtime(true),
+                        Rand::getString(8)
+                    );
+                }
             ]);
 
             $transport->setOptions($options);
