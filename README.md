@@ -17,7 +17,7 @@ Check out the [YouTube playlist](https://www.youtube.com/playlist?list=PLaVz4Aml
 Subscribe and Share :) 
 
 # Environment Setup
-1. Install XAMPP with PHP 7.0 https://www.apachefriends.org/download.html
+1. Install XAMPP with PHP 7.0 and MySQL MariaDB https://www.apachefriends.org/download.html
 1. Add PHP path to your Windows PATH environment variable
 1. Install HeidiSQL https://www.heidisql.com/
 1. Download Phalcon and put in PHP ext/ folder https://phalconphp.com/en/download/
