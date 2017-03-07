@@ -35,6 +35,13 @@ dependency libraries.
 NOTE: There might be issues with generating GUID/UUID in PHP. See more under the Requirements section of the PHP 
 composer package [ramsey/uuid](https://github.com/ramsey/uuid)
 
+# REST API Endpoints
+A list of available API endpoints and their requests are shared as a POSTMAN REST client collection 
+[here](https://www.getpostman.com/collections/c167795b48d454272532).
+
+POSTMAN is a free Google Chrome extension, you can download it from the 
+[Chrome store](https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop) to import the collection of APIs.
+
 # GUID/UUID as Primary Keys in the DB
 This project uses GUID as primary keys (and columns that reference those PRIMARY KEYS) for all critical tables. 
 Some examples of tables that use GUID as primary keys are `players`, `player_account_recovery` and `player_sessions`.
