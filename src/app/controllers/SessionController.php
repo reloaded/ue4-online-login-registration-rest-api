@@ -22,7 +22,9 @@ use App\Models\PlayerSessions;
 use Ramsey\Uuid\Uuid;
 use Zend\Mail\Message;
 use Zend\Math\Rand;
+use Zend\Mime\Message as MimeMessage;
 use Zend\Mime\Mime;
+use Zend\Mime\Part;
 
 class SessionController extends ControllerBase
 {
@@ -30,7 +32,8 @@ class SessionController extends ControllerBase
      * Registers a new player account.
      *
      * Takes a JSON structure from the HTTP request body, decodes it as a RegistrationRequest object and creates a
-     * new player if the request is valid.
+     * new player if the request is valid. An account activation email will be sent to the player's email address
+     * immediately.
      *
      * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface
      * @see RegistrationRequest
@@ -133,7 +136,6 @@ class SessionController extends ControllerBase
         }
         catch(\Exception $ex)
         {
-            var_dump($ex);exit;
             if($this->db->isUnderTransaction())
             {
                 $this->db->rollback();
@@ -256,7 +258,10 @@ class SessionController extends ControllerBase
         }
         catch(\Exception $ex)
         {
-            $this->db->rollback();
+            if($this->db->isUnderTransaction())
+            {
+                $this->db->rollback();
+            }
 
             return $this->response
                 ->setStatusCode(HttpStatusCode::InternalServerError)
@@ -309,7 +314,10 @@ class SessionController extends ControllerBase
         }
         catch(\Exception $ex)
         {
-            $this->db->rollback();
+            if($this->db->isUnderTransaction())
+            {
+                $this->db->rollback();
+            }
 
             return $this->response
                 ->setStatusCode(HttpStatusCode::InternalServerError)
@@ -382,7 +390,10 @@ class SessionController extends ControllerBase
         }
         catch(\Exception $ex)
         {
-            $this->db->rollback();
+            if($this->db->isUnderTransaction())
+            {
+                $this->db->rollback();
+            }
 
             return $this->response
                 ->setStatusCode(HttpStatusCode::InternalServerError)
@@ -393,16 +404,23 @@ class SessionController extends ControllerBase
         }
     }
 
+    /**
+     * Creates a new \Zend\Mail\Message for the account activation email.
+     *
+     * @param Players $player
+     * @param PlayerAccountRecovery $accountRecovery
+     * @return Message
+     */
     private function _createAccountActivationMessage(Players $player, PlayerAccountRecovery $accountRecovery): Message
     {
         $emailTemplate = new ActivateTemplate($player, $accountRecovery);
 
-        $html = new \Zend\Mime\Part($emailTemplate->renderHtml());
+        $html = new Part($emailTemplate->renderHtml());
         $html->type = Mime::TYPE_HTML;
         $html->charset = 'utf-8';
         $html->encoding = Mime::ENCODING_QUOTEDPRINTABLE;
 
-        $body = new \Zend\Mime\Message();
+        $body = new MimeMessage();
         $body->setParts([$html]);
 
         $activationMessage = new Message();
