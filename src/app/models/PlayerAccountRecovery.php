@@ -6,21 +6,44 @@ use Ramsey\Uuid\Uuid;
 
 class PlayerAccountRecovery extends AbstractPlayerAccountRecovery
 {
-    public function beforeSave()
+    /**
+     * Method to set the value of field PlayerId
+     *
+     * @param string $PlayerId
+     * @return $this
+     */
+    public function setPlayerId($PlayerId)
     {
-        // Convert the GUID string into binary
-        $this->PlayerId = hex2bin(str_replace('-', '', $this->PlayerId));
+        $this->PlayerId = hex2bin(str_replace('-', '', $PlayerId));
+
+        return $this;
     }
 
-    public function afterFetch()
+    /**
+     * Returns the value of field PlayerId
+     *
+     * @return string
+     */
+    public function getPlayerId()
     {
-        // Convert the binary GUID to a GUID string
-        $this->PlayerId = Uuid::fromBytes($this->PlayerId)->toString();
+        return Uuid::fromBytes($this->PlayerId)->toString();
     }
 
-    public function afterSave()
-    {
-        // Convert the binary GUID to a GUID string
-        $this->PlayerId = Uuid::fromBytes($this->PlayerId)->toString();
-    }
+//    public function beforeSave()
+//    {
+//        // Convert the GUID string into binary
+//        $this->PlayerId = hex2bin(str_replace('-', '', $this->PlayerId));
+//    }
+//
+//    public function afterFetch()
+//    {
+//        // Convert the binary GUID to a GUID string
+//        $this->PlayerId = Uuid::fromBytes($this->PlayerId)->toString();
+//    }
+//
+//    public function afterSave()
+//    {
+//        // Convert the binary GUID to a GUID string
+//        $this->PlayerId = Uuid::fromBytes($this->PlayerId)->toString();
+//    }
 }

@@ -31,14 +31,19 @@ class RouteConfig
             'action' => 'route404'
         ]);
 
-        $router->addPost("/account/register", [
+        $router->addPost('/account/register', [
             'controller' => 'account',
             'action' => 'register'
         ]);
 
-        $router->addPost("/account/login", [
+        $router->addPost('/account/login', [
             'controller' => 'account',
             'action' => 'login'
+        ]);
+
+        $router->addPatch('/account/activate', [
+            'controller' => 'account',
+            'action' => 'activate'
         ]);
 
         $router->addDelete("/session/{sessionId:([{(]?[0-9A-Fa-f]{8}[-]?([0-9A-Fa-f]{4}[-]?){3}[0-9A-Fa-f]{12}[)}]?)}", [
