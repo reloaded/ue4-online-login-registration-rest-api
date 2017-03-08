@@ -51,6 +51,11 @@ class RouteConfig
             'action' => 'recoverPassword'
         ]);
 
+        $router->addPatch('/account/reset-password', [
+            'controller' => 'account',
+            'action' => 'resetPassword'
+        ]);
+
         $router->addDelete("/session/{sessionId:([{(]?[0-9A-Fa-f]{8}[-]?([0-9A-Fa-f]{4}[-]?){3}[0-9A-Fa-f]{12}[)}]?)}", [
             'controller' => 'session',
             'action' => 'logout'

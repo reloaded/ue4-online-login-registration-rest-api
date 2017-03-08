@@ -13,10 +13,12 @@ use App\Library\Requests\Account\Activate as ActivateRequest;
 use App\Library\Requests\Account\Login as LoginRequest;
 use App\Library\Requests\Account\RecoverPassword as RecoverPasswordRequest;
 use App\Library\Requests\Account\Registration as RegistrationRequest;
+use App\Library\Requests\Account\ResetPassword as ResetPasswordRequest;
 use App\Library\Requests\Account\Validation\Activate as ActivateRequestValidation;
 use App\Library\Requests\Account\Validation\Login as LoginRequestValidation;
 use App\Library\Requests\Account\Validation\RecoverPassword as RecoverPasswordValidation;
 use App\Library\Requests\Account\Validation\Registration as RegistrationRequestValidation;
+use App\Library\Requests\Account\Validation\ResetPassword as ResetPasswordValidation;
 use App\Library\Responses\DataObjectResponse;
 use App\Library\Responses\FaultResponse;
 use App\Library\Responses\ValidationFaultResponse;
@@ -429,9 +431,143 @@ class AccountController extends ControllerBase
         }
     }
 
-    public function resetPasswordAction()
+    /**
+     * Resets the player's account password if the password reset code is valid.
+     *
+     * @param ResetPasswordRequest $request
+     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface
+     */
+    public function resetPasswordAction(ResetPasswordRequest $request)
     {
+        try
+        {
+            $this->db->begin();
 
+            $requestValidation = new ResetPasswordValidation();
+            $requestErrors = $requestValidation->validate(null, $request);
+
+            if(count($requestErrors))
+            {
+                $this->db->rollback();
+
+                $validationFault = new ValidationFaultResponse(HttpStatusCode::BadRequest);
+                $validationFault->addPhalconValidationGroup($requestValidation->getMessages());
+
+                return $this->response
+                    ->setStatusCode(HttpStatusCode::BadRequest)
+                    ->setJsonContent($validationFault);
+            }
+
+            #region Lookup player by email
+
+            $player = Players::findFirst([
+                'conditions' => 'Email = ?1',
+                'bind' => [
+                    1 => $request->Email
+                ]
+            ]);
+
+            if(!$player)
+            {
+                $this->db->rollback();
+
+                $validationFault = new ValidationFaultResponse(HttpStatusCode::BadRequest);
+                $validationFault->addValidationErrors([new ValidationFieldError(
+                    'Email',
+                    'The email you entered does not match our records.'
+                )]);
+
+                return $this->response
+                    ->setStatusCode(HttpStatusCode::BadRequest)
+                    ->setJsonContent($validationFault);
+            }
+
+            #endregion
+
+            #region Lookup player activation code
+
+            $playerActivation = PlayerAccountRecovery::findFirst([
+                'conditions' => 'PlayerId = ?1 AND Code = ?2 AND Expiration >= ?3 AND Type = ?4 ',
+                'bind' => [
+                    1 => Uuid::fromString($player->getId())->getBytes(),
+                    2 => $request->Code,
+                    3 => (new \DateTime())->format('Y-m-d H:i:s'),
+                    4 => 'PasswordReset'
+                ]
+            ]);
+
+            if(!$playerActivation)
+            {
+                $this->db->rollback();
+
+                $validationFault = new ValidationFaultResponse(HttpStatusCode::BadRequest);
+                $validationFault->addValidationErrors([new ValidationFieldError(
+                    'Code_Or_Expiration',
+                    'Password reset code does not match our records for this account or it has expired.'
+                )]);
+
+                return $this->response
+                    ->setStatusCode(HttpStatusCode::BadRequest)
+                    ->setJsonContent($validationFault);
+            }
+
+            #endregion
+
+            #region Reset password
+
+            $player->setPassword(password_hash($request->Password, PASSWORD_DEFAULT));
+
+            if(!$player->save())
+            {
+                $this->db->rollback();
+
+                $validationFault = new ValidationFaultResponse(HttpStatusCode::BadRequest);
+                $validationFault->addPhalconModelMessages($player->getMessages());
+
+                return $this->response
+                    ->setStatusCode(HttpStatusCode::BadRequest)
+                    ->setJsonContent($validationFault);
+            }
+
+            #endregion
+
+            #region Delete password reset code
+
+            if(!$playerActivation->delete())
+            {
+                $this->db->rollback();
+
+                $faultResponse = new FaultResponse(
+                    'There was an error deleting the password reset code.',
+                    HttpStatusCode::InternalServerError
+                );
+
+                return $this->response
+                    ->setStatusCode(HttpStatusCode::InternalServerError)
+                    ->setJsonContent($faultResponse);
+            }
+
+            #endregion
+
+            $this->db->commit();
+
+            return $this->response
+                ->setStatusCode(HttpStatusCode::OK);
+        }
+        catch(\Exception $ex)
+        {
+            if($this->db->isUnderTransaction())
+            {
+                $this->db->rollback();
+            }
+
+            return $this->response
+                ->setStatusCode(HttpStatusCode::InternalServerError)
+                ->setJsonContent(new FaultResponse(
+                    'There was an unexpected error while activating your account.',
+                    HttpStatusCode::InternalServerError
+                ));
+        }
     }
 
     /**
