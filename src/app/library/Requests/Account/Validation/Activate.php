@@ -10,6 +10,7 @@ namespace App\Library\Requests\Account\Validation;
 use App\Library\Requests\Account\Activate as ActivateRequest;
 use App\Validation\Player\Email;
 use App\Validation\Player\Password;
+use App\Validation\PlayerAccountRecovery\Code;
 use Phalcon\Validation;
 use Phalcon\Validation\Message\Group;
 
@@ -21,11 +22,16 @@ class Activate extends Validation
     /** @var Email */
     protected $_emailValidation;
 
+    /** @var Code */
+    protected $_codeValidation;
+
     public function initialize()
     {
         $this->_passwordValidation = new Password();
 
         $this->_emailValidation = new Email();
+
+        $this->_codeValidation = new Code();
     }
 
     /**
@@ -38,10 +44,13 @@ class Activate extends Validation
     public function afterValidation($data, ActivateRequest $entity, $messages)
     {
         /** @var Validation\Message[] $validationMessages */
-        $validationMessages = $this->_passwordValidation->validate(null, $entity);
+        $validationMessages = $this->_passwordValidation->validate($data, $entity);
         $messages->appendMessages($validationMessages);
 
-        $validationMessages = $this->_emailValidation->validate(null, $entity);
+        $validationMessages = $this->_emailValidation->validate($data, $entity);
+        $messages->appendMessages($validationMessages);
+
+        $validationMessages = $this->_codeValidation->validate($data, $entity);
         $messages->appendMessages($validationMessages);
     }
 }
