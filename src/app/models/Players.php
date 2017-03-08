@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
-use App\Models\Validation\Players as PlayersValidation;
+use App\Validation\Player\Email;
+use App\Validation\Player\InGameName;
+use App\Validation\Player\PersonalName;
 use Ramsey\Uuid\Uuid;
 
 class Players extends AbstractPlayers
@@ -76,8 +78,20 @@ class Players extends AbstractPlayers
 
     public function validation()
     {
-        $validation = new PlayersValidation();
+        /** @var \Phalcon\Validation\Message\Group $validationMessages */
 
-        return $this->validate($validation);
+        $emailValidation = new Email();
+        $validationMessages = $emailValidation->validate(null, $this);
+        $this->appendValidationMessages($validationMessages);
+
+        $inGameNameValidation = new InGameName();
+        $validationMessages = $inGameNameValidation->validate(null, $this);
+        $this->appendValidationMessages($validationMessages);
+
+        $personalNameValidation = new PersonalName();
+        $validationMessages = $personalNameValidation->validate(null, $this);
+        $this->appendValidationMessages($validationMessages);
+
+        return !$this->validationHasFailed();
     }
 }
