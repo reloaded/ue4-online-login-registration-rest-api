@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Validation\PlayerAccountRecovery\Code;
 use Ramsey\Uuid\Uuid;
 
 class PlayerAccountRecovery extends AbstractPlayerAccountRecovery
@@ -46,4 +47,14 @@ class PlayerAccountRecovery extends AbstractPlayerAccountRecovery
 //        // Convert the binary GUID to a GUID string
 //        $this->PlayerId = Uuid::fromBytes($this->PlayerId)->toString();
 //    }
+
+    public function validation()
+    {
+        /** @var \Phalcon\Validation\Message\Group $validationMessages */
+
+        $codeValidation = new Code();
+        $this->appendValidationMessages($codeValidation->validate(null, $this));
+
+        return !$this->validationHasFailed();
+    }
 }

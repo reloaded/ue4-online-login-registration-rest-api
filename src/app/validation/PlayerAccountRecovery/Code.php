@@ -8,6 +8,7 @@ namespace App\Validation\PlayerAccountRecovery;
 
 
 use Phalcon\Validation;
+use Phalcon\Validation\Validator\Alnum;
 use Phalcon\Validation\Validator\StringLength;
 
 /**
@@ -24,8 +25,15 @@ class Code extends Validation
             new StringLength([
                 'min' => 10,
                 'max' => 10,
-                'messageMinimum' => 'Recovery code must be 10 characters.',
-                'messageMaximum' => 'Recovery code must be 10 characters.'
+                'messageMinimum' => 'Code must be 10 characters.',
+                'messageMaximum' => 'Code must be 10 characters.'
+            ])
+        );
+
+        $this->add(
+            'Code',
+            new Alnum([
+                'message' => 'Code must have only alphanumeric characters.'
             ])
         );
     }

@@ -98,7 +98,7 @@ class AccountController extends ControllerBase
             $accountRecoveryDuration = new \DateTime($this->_appSettings->accountRecoveryDuration);
             $accountRecovery = new PlayerAccountRecovery([
                 'PlayerId' => $player->getId(),
-                'Code' => Rand::getString(10),
+                'Code' => Rand::getString(10, 'abcdefghijklmnopqrstuvwxyz0123456789'),
                 'Expiration' => $accountRecoveryDuration->format('Y-m-d H:i:s'),
                 'GeneratedOn' => (new \DateTime())->format('Y-m-d H:i:s'),
                 'Type' => 'Activation'
@@ -433,6 +433,11 @@ class AccountController extends ControllerBase
                     HttpStatusCode::InternalServerError
                 ));
         }
+    }
+
+    public function resetPasswordAction()
+    {
+
     }
 
     #endregion
