@@ -10,12 +10,10 @@ use App\Library\EmailMessages\AccountRecovery\ActivateTemplate;
 use App\Library\EmailMessages\AccountRecovery\RecoverPasswordTemplate;
 use App\Library\Net\HttpStatusCode;
 use App\Library\Requests\Account\Activate as ActivateRequest;
-use App\Library\Requests\Account\Login as LoginRequest;
 use App\Library\Requests\Account\RecoverPassword as RecoverPasswordRequest;
 use App\Library\Requests\Account\Registration as RegistrationRequest;
 use App\Library\Requests\Account\ResetPassword as ResetPasswordRequest;
 use App\Library\Requests\Account\Validation\Activate as ActivateRequestValidation;
-use App\Library\Requests\Account\Validation\Login as LoginRequestValidation;
 use App\Library\Requests\Account\Validation\RecoverPassword as RecoverPasswordValidation;
 use App\Library\Requests\Account\Validation\Registration as RegistrationRequestValidation;
 use App\Library\Requests\Account\Validation\ResetPassword as ResetPasswordValidation;
@@ -23,10 +21,8 @@ use App\Library\Responses\DataObjectResponse;
 use App\Library\Responses\FaultResponse;
 use App\Library\Responses\ValidationFaultResponse;
 use App\Library\Responses\ValidationFieldError;
-use App\Models\AbstractPlayers;
 use App\Models\PlayerAccountRecovery;
 use App\Models\Players;
-use App\Models\PlayerSessions;
 use Ramsey\Uuid\Uuid;
 use Zend\Mail\Message;
 use Zend\Math\Rand;
@@ -275,34 +271,10 @@ class AccountController extends ControllerBase
 
             #endregion
 
-            #region Create player session
-
-            $playerSession = $this->_recreatePlayerSession($player);
-
-            if(!$playerSession->save())
-            {
-                $this->db->rollback();
-
-                $validationFault = new ValidationFaultResponse(HttpStatusCode::BadRequest);
-                $validationFault->addPhalconModelMessages($playerSession->getMessages());
-
-                return $this->response
-                    ->setStatusCode(HttpStatusCode::BadRequest)
-                    ->setJsonContent($validationFault);
-            }
-
-            #endregion
-
             $this->db->commit();
 
-            $responseData = (object) [
-                'SessionId' => $playerSession->getSessionId(),
-                'Expiration' => $playerSession->getExpiration()
-            ];
-
             return $this->response
-                ->setStatusCode(HttpStatusCode::Created)
-                ->setJsonContent(new DataObjectResponse($responseData, HttpStatusCode::Created));
+                ->setStatusCode(HttpStatusCode::OK);
         }
         catch(\Exception $ex)
         {
@@ -315,117 +287,6 @@ class AccountController extends ControllerBase
                 ->setStatusCode(HttpStatusCode::InternalServerError)
                 ->setJsonContent(new FaultResponse(
                     'There was an unexpected error while activating your account.',
-                    HttpStatusCode::InternalServerError
-                ));
-        }
-    }
-
-    /**
-     * Authenticates an existing player and create a new session. If there is an existing session for the player its
-     * invalidated and a new one is created.
-     *
-     * @param LoginRequest $request
-     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface
-     */
-    public function loginAction(LoginRequest $request)
-    {
-        try
-        {
-            $this->db->begin();
-
-            $requestValidation = new LoginRequestValidation();
-            $requestErrors = $requestValidation->validate(null, $request);
-
-            if(count($requestErrors))
-            {
-                $validationFault = new ValidationFaultResponse(HttpStatusCode::BadRequest);
-                $validationFault->addPhalconValidationGroup($requestValidation->getMessages());
-
-                return $this->response
-                    ->setStatusCode(HttpStatusCode::BadRequest)
-                    ->setJsonContent($validationFault);
-            }
-
-            #region Lookup player by email and password
-
-            $player = Players::findFirst([
-                'conditions' => 'Email = ?1',
-                'bind' => [
-                    1 => $request->Email
-                ]
-            ]);
-
-            if(!$player || !password_verify($request->Password, $player->getPassword()))
-            {
-                $validationFault = new ValidationFaultResponse(HttpStatusCode::BadRequest);
-                $validationFault->addValidationErrors([new ValidationFieldError(
-                    'Email_Or_Password',
-                    'The email and password you entered does not match our records.'
-                )]);
-
-                return $this->response
-                    ->setStatusCode(HttpStatusCode::BadRequest)
-                    ->setJsonContent($validationFault);
-            }
-
-            #endregion
-
-            #region Check player activated
-
-            if(!$player->getIsActivated())
-            {
-                $faultResponse = new FaultResponse(
-                    'You must activate your account before logging in.',
-                    HttpStatusCode::Unauthorized
-                );
-
-                return $this->response
-                    ->setStatusCode(HttpStatusCode::Unauthorized)
-                    ->setJsonContent($faultResponse);
-            }
-
-            #endregion
-
-            #region Create player session
-
-            $playerSession = $this->_recreatePlayerSession($player);
-
-            if(!$playerSession->save())
-            {
-                $this->db->rollback();
-
-                $validationFault = new ValidationFaultResponse(HttpStatusCode::BadRequest);
-                $validationFault->addPhalconModelMessages($playerSession->getMessages());
-
-                return $this->response
-                    ->setStatusCode(HttpStatusCode::BadRequest)
-                    ->setJsonContent($validationFault);
-            }
-
-            #endregion
-
-            $this->db->commit();
-
-            $responseData = (object) [
-                'SessionId' => $playerSession->getSessionId(),
-                'Expiration' => $playerSession->getExpiration()
-            ];
-
-            return $this->response
-                ->setStatusCode(HttpStatusCode::Created)
-                ->setJsonContent(new DataObjectResponse($responseData, HttpStatusCode::Created));
-        }
-        catch(\Exception $ex)
-        {
-            if($this->db->isUnderTransaction())
-            {
-                $this->db->rollback();
-            }
-
-            return $this->response
-                ->setStatusCode(HttpStatusCode::InternalServerError)
-                ->setJsonContent(new FaultResponse(
-                    'There was an unexpected error while authenticating.',
                     HttpStatusCode::InternalServerError
                 ));
         }
@@ -755,42 +616,6 @@ class AccountController extends ControllerBase
             ->setBody($body);
 
         return $message;
-
-    }
-
-    /**
-     * Creates a new player session if one does not already exist for this player otherwise retrieves the existing
-     * session and updates it with new values.
-     *
-     * @param AbstractPlayers $player
-     * @return PlayerSessions
-     */
-    private function _recreatePlayerSession(AbstractPlayers $player): PlayerSessions
-    {
-
-        $playerSession = PlayerSessions::findFirst([
-            'conditions' => 'PlayerId = ?1',
-            'bind' => [
-                1 => Uuid::fromString($player->getId())->getBytes()
-            ]
-        ]);
-
-        if(!$playerSession)
-        {
-            $playerSession = new PlayerSessions([
-                'PlayerId' => $player->getId()
-            ]);
-        }
-
-        $sessionExpiration = new \DateTime($this->di->getShared('config')->application->sessionDuration);
-
-        $playerSession
-            ->setSessionId(Uuid::uuid4()->toString())
-            ->setExpiration($sessionExpiration->format('Y-m-d H:i:s'))
-            ->setCreated((new \DateTime())->format('Y-m-d H:i:s'))
-            ->setRemoteIp($this->request->getClientAddress());
-
-        return $playerSession;
 
     }
 

@@ -36,11 +36,6 @@ class RouteConfig
             'action' => 'register'
         ]);
 
-        $router->addPost('/account/login', [
-            'controller' => 'account',
-            'action' => 'login'
-        ]);
-
         $router->addPatch('/account/activate', [
             'controller' => 'account',
             'action' => 'activate'
@@ -54,6 +49,11 @@ class RouteConfig
         $router->addPatch('/account/reset-password', [
             'controller' => 'account',
             'action' => 'resetPassword'
+        ]);
+
+        $router->addPost('/session/login', [
+            'controller' => 'session',
+            'action' => 'login'
         ]);
 
         $router->addDelete("/session/{sessionId:([{(]?[0-9A-Fa-f]{8}[-]?([0-9A-Fa-f]{4}[-]?){3}[0-9A-Fa-f]{12}[)}]?)}", [
