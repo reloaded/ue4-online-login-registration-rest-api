@@ -8,7 +8,7 @@ namespace Reloaded\UnrealEngine4\Web\Config;
 
 require_once 'AppConfig.php';
 
-use App\Library\Requests\BaseRequest;
+use App\Library\Requests\AbstractRequest;
 use Phalcon\Di\FactoryDefault;
 use Phalcon\DiInterface;
 use Phalcon\Events\Event;
@@ -133,7 +133,7 @@ class DiConfig
                             $className = $parameters[$i]->getClass()->name;
 
                             // Check if the parameter expects a request class instance
-                            if (is_subclass_of($className,  BaseRequest::class))
+                            if (is_subclass_of($className,  AbstractRequest::class))
                             {
                                 $jsonMapper = $di->getShared('jsonMapper');
 

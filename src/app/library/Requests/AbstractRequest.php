@@ -7,7 +7,7 @@
 namespace App\Library\Requests;
 
 
-class BaseRequest
+abstract class AbstractRequest
 {
 
 }

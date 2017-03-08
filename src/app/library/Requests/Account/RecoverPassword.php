@@ -7,9 +7,9 @@
 namespace App\Library\Requests\Account;
 
 
-use App\Library\Requests\BaseRequest;
+use App\Library\Requests\AbstractRequest;
 
-class RecoverPassword extends BaseRequest
+class RecoverPassword extends AbstractRequest
 {
     /** @var string */
     public $Email;

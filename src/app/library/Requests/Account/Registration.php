@@ -7,9 +7,9 @@
 namespace App\Library\Requests\Account;
 
 
-use App\Library\Requests\BaseRequest;
+use App\Library\Requests\AbstractRequest;
 
-class Registration extends BaseRequest
+class Registration extends AbstractRequest
 {
     /** @var string */
     public $Email;
