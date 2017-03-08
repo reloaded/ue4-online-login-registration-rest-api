@@ -4,8 +4,10 @@
  * @date 3/3/2017 7:14 PM
  */
 
-namespace App\Library\Requests;
+namespace App\Library\Requests\Account;
 
+
+use App\Library\Requests\BaseRequest;
 
 class Login extends BaseRequest
 {

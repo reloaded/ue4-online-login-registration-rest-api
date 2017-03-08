@@ -4,10 +4,10 @@
  * @date 3/4/2017 5:21 PM
  */
 
-namespace App\Library\Requests\Validation;
+namespace App\Library\Requests\Account\Validation;
 
 
-use App\Library\Requests\Login as LoginRequest;
+use App\Library\Requests\Account\Login as LoginRequest;
 use App\Validation\Player\Email;
 use App\Validation\Player\Password;
 use Phalcon\Validation;

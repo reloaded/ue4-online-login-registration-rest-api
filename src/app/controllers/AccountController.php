@@ -13,11 +13,11 @@ use App\Library\Net\Responses\FaultResponse;
 use App\Library\Net\Responses\ValidationFaultResponse;
 use App\Library\Net\Responses\ValidationFieldError;
 use App\Library\Requests\Account\Activate as ActivateRequest;
+use App\Library\Requests\Account\Login as LoginRequest;
+use App\Library\Requests\Account\Registration as RegistrationRequest;
 use App\Library\Requests\Account\Validation\Activate as ActivateRequestValidation;
-use App\Library\Requests\Login as LoginRequest;
-use App\Library\Requests\Registration as RegistrationRequest;
-use App\Library\Requests\Validation\Login;
-use App\Library\Requests\Validation\Registration as RegistrationRequestValidation;
+use App\Library\Requests\Account\Validation\Login as LoginRequestValidation;
+use App\Library\Requests\Account\Validation\Registration as RegistrationRequestValidation;
 use App\Models\AbstractPlayers;
 use App\Models\PlayerAccountRecovery;
 use App\Models\Players;
@@ -328,7 +328,7 @@ class AccountController extends ControllerBase
         {
             $this->db->begin();
 
-            $requestValidation = new Login();
+            $requestValidation = new LoginRequestValidation();
             $requestErrors = $requestValidation->validate(null, $loginRequest);
 
             if(count($requestErrors))

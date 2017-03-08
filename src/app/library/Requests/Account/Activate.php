@@ -7,6 +7,8 @@
 namespace App\Library\Requests\Account;
 
 
+use App\Library\Requests\BaseRequest;
+
 class Activate extends BaseRequest
 {
     /** @var string */

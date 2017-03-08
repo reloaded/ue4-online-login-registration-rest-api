@@ -4,8 +4,10 @@
  * @date 2/28/2017 4:15 PM
  */
 
-namespace App\Library\Requests;
+namespace App\Library\Requests\Account;
 
+
+use App\Library\Requests\BaseRequest;
 
 class Registration extends BaseRequest
 {

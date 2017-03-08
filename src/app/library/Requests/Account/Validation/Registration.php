@@ -4,10 +4,10 @@
  * @date 3/3/2017 9:40 AM
  */
 
-namespace App\Library\Requests\Validation;
+namespace App\Library\Requests\Account\Validation;
 
 
-use App\Library\Requests\Registration as RegistrationRequest;
+use App\Library\Requests\Account\Registration as RegistrationRequest;
 use App\Models\Players;
 use App\Validation\Player\Password;
 use Phalcon\Validation;
