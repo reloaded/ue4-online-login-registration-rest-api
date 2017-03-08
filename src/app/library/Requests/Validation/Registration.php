@@ -8,13 +8,11 @@ namespace App\Library\Requests\Validation;
 
 
 use App\Library\Requests\Registration as RegistrationRequest;
+use App\Models\Players;
 use App\Validation\Player\Password;
 use Phalcon\Validation;
 use Phalcon\Validation\Message\Group;
 use Phalcon\Validation\Validator\Confirmation;
-use Phalcon\Validation\Validator\Regex;
-use Phalcon\Validation\Validator\StringLength;
-use App\Models\Players;
 
 class Registration extends Validation
 {
@@ -44,7 +42,7 @@ class Registration extends Validation
     public function afterValidation($data, RegistrationRequest $entity, $messages)
     {
         /** @var Validation\Message[] $validationMessages */
-        $validationMessages = $this->_passwordValidation->validate(null, $entity);
+        $validationMessages = $this->_passwordValidation->validate($data, $entity);
         $messages->appendMessages($validationMessages);
 
         $emailRegistered = Players::findFirst([

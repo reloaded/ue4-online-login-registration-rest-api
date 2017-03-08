@@ -38,10 +38,10 @@ class Login extends Validation
     public function afterValidation($data, LoginRequest $entity, $messages)
     {
         /** @var Validation\Message[] $validationMessages */
-        $validationMessages = $this->_passwordValidation->validate(null, $entity);
+        $validationMessages = $this->_passwordValidation->validate($data, $entity);
         $messages->appendMessages($validationMessages);
 
-        $validationMessages = $this->_emailValidation->validate(null, $entity);
+        $validationMessages = $this->_emailValidation->validate($data, $entity);
         $messages->appendMessages($validationMessages);
     }
 }
