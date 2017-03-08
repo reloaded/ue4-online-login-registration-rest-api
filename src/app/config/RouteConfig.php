@@ -28,7 +28,7 @@ class RouteConfig
 
         $router->notFound([
             'controller' => 'index',
-            'action' => 'route404'
+            'action' => 'routeNotFound'
         ]);
 
         $router->addPost('/account/register', [

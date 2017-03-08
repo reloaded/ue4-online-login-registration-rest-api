@@ -13,11 +13,22 @@ use Phalcon\Http\ResponseInterface;
 class IndexController extends ControllerBase
 {
 
-    public function route404Action() : ResponseInterface
+    public function routeNotFoundAction() : ResponseInterface
     {
-        return $this->response->setJsonContent(
-            new FaultResponse('Endpoint not found.', HttpStatusCode::NotFound)
-        );
+        return $this->response
+            ->setStatusCode(HttpStatusCode::NotFound)
+            ->setJsonContent(
+                new FaultResponse('Endpoint not found.', HttpStatusCode::NotFound)
+            );
+    }
+
+    public function routeUnauthorizedAction() : ResponseInterface
+    {
+        return $this->response
+            ->setStatusCode(HttpStatusCode::Unauthorized)
+            ->setJsonContent(
+                new FaultResponse('Unauthorized. Please login.', HttpStatusCode::Unauthorized)
+            );
     }
 
 }
