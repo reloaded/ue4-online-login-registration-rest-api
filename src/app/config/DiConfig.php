@@ -9,6 +9,7 @@ namespace Reloaded\UnrealEngine4\Web\Config;
 require_once 'AppConfig.php';
 
 use App\Library\Requests\AbstractRequest;
+use App\Plugins\AuthenticationAnnontation;
 use Phalcon\Di\FactoryDefault;
 use Phalcon\DiInterface;
 use Phalcon\Events\Event;
@@ -154,6 +155,8 @@ class DiConfig
                     }
                 }
             );
+
+            $eventsManager->attach('dispatch', new AuthenticationAnnontation());
 
             $dispatcher = new Dispatcher();
 

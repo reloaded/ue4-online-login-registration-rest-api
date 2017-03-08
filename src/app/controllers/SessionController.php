@@ -28,6 +28,7 @@ class SessionController extends ControllerBase
      *
      * @param LoginRequest $request
      * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface
+     * @authentication(allowAnonymous=true, allowAuthenticated=false)
      */
     public function loginAction(LoginRequest $request)
     {
@@ -157,12 +158,13 @@ class SessionController extends ControllerBase
      * Deletes a player's session.
      *
      * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface
+     * @authentication(allowAnonymous=false, allowAuthenticated=true)
      */
     public function logoutAction()
     {
         try
         {
-            $sessionId = Uuid::fromString($this->dispatcher->getParam('sessionId'));
+            $sessionId = Uuid::fromString($this->request->getHeader('Sessionid'));
 
             $session = PlayerSessions::findFirst([
                 'conditions' => 'SessionId = ?1',
@@ -213,6 +215,7 @@ class SessionController extends ControllerBase
      * Extends the expiration of a player's session.
      *
      * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface
+     * @authentication(allowAnonymous=false, allowAuthenticated=true)
      */
     public function heartbeatAction()
     {
@@ -220,7 +223,7 @@ class SessionController extends ControllerBase
         {
             $this->db->begin();
 
-            $sessionId = Uuid::fromString($this->dispatcher->getParam('sessionId'));
+            $sessionId = Uuid::fromString($this->request->getHeader('Sessionid'));
 
             $session = PlayerSessions::findFirst([
                 'conditions' => 'SessionId = ?1',

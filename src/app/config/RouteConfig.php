@@ -56,12 +56,12 @@ class RouteConfig
             'action' => 'login'
         ]);
 
-        $router->addDelete("/session/{sessionId:([{(]?[0-9A-Fa-f]{8}[-]?([0-9A-Fa-f]{4}[-]?){3}[0-9A-Fa-f]{12}[)}]?)}", [
+        $router->addDelete("/session", [
             'controller' => 'session',
             'action' => 'logout'
         ]);
 
-        $router->addPatch("/session/{sessionId:([{(]?[0-9A-Fa-f]{8}[-]?([0-9A-Fa-f]{4}[-]?){3}[0-9A-Fa-f]{12}[)}]?)}/heartbeat", [
+        $router->addPatch("/session/heartbeat", [
             'controller' => 'session',
             'action' => 'heartbeat'
         ]);

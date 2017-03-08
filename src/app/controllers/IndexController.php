@@ -22,7 +22,7 @@ class IndexController extends ControllerBase
             );
     }
 
-    public function routeUnauthorizedAction() : ResponseInterface
+    public function unauthorizedAction() : ResponseInterface
     {
         return $this->response
             ->setStatusCode(HttpStatusCode::Unauthorized)

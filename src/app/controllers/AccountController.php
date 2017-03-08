@@ -42,6 +42,7 @@ class AccountController extends ControllerBase
      * @param RegistrationRequest $request
      * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface
      * @see RegistrationRequest
+     * @authentication(allowAnonymous=true, allowAuthenticated=false)
      */
     public function registerAction(RegistrationRequest $request)
     {
@@ -158,6 +159,7 @@ class AccountController extends ControllerBase
      * @param ActivateRequest $request
      * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface
      * @see RegistrationRequest
+     * @authentication(allowAnonymous=true, allowAuthenticated=false)
      */
     public function activateAction(ActivateRequest $request)
     {
@@ -297,6 +299,7 @@ class AccountController extends ControllerBase
      *
      * @param ResetPasswordRequest $request
      * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface
+     * @authentication(allowAnonymous=true, allowAuthenticated=false)
      */
     public function resetPasswordAction(ResetPasswordRequest $request)
     {
@@ -439,6 +442,7 @@ class AccountController extends ControllerBase
      *
      * @param RecoverPasswordRequest $request
      * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface
+     * @authentication(allowAnonymous=true, allowAuthenticated=false)
      */
     public function recoverPasswordAction(RecoverPasswordRequest $request)
     {
