@@ -35,23 +35,18 @@ class AccountController extends ControllerBase
     #region API Endpoints
 
     /**
-     * Registers a new player account.
+     * Registers a new player account. An account activation email will be sent to the player's email
+     * address immediately.
      *
-     * Takes a JSON structure from the HTTP request body, decodes it as a RegistrationRequest object and creates a
-     * new player if the request is valid. An account activation email will be sent to the player's email address
-     * immediately.
-     *
+     * @param RegistrationRequest $registrationRequest
      * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface
      * @see RegistrationRequest
      */
-    public function registerAction()
+    public function registerAction(RegistrationRequest $registrationRequest)
     {
         try
         {
             $this->db->begin();
-
-            /** @var $registrationRequest RegistrationRequest */
-            $registrationRequest = $this->_mapper->map($this->request->getJsonRawBody(), new RegistrationRequest());
 
             $requestValidation = new RegistrationRequestValidation();
             $requestErrors = $requestValidation->validate(null, $registrationRequest);
@@ -159,17 +154,15 @@ class AccountController extends ControllerBase
     /**
      * Activates a new player account that has not yet been activated.
      *
+     * @param ActivateRequest $request
      * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface
      * @see RegistrationRequest
      */
-    public function activateAction()
+    public function activateAction(ActivateRequest $request)
     {
         try
         {
             $this->db->begin();
-
-            /** @var $request ActivateRequest */
-            $request = $this->_mapper->map($this->request->getJsonRawBody(), new ActivateRequest());
 
             $requestValidation = new ActivateRequestValidation();
             $requestErrors = $requestValidation->validate(null, $request);
@@ -326,16 +319,14 @@ class AccountController extends ControllerBase
      * Authenticates an existing player and create a new session. If there is an existing session for the player its
      * invalidated and a new one is created.
      *
+     * @param LoginRequest $loginRequest
      * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface
      */
-    public function loginAction()
+    public function loginAction(LoginRequest $loginRequest)
     {
         try
         {
             $this->db->begin();
-
-            /** @var $loginRequest LoginRequest */
-            $loginRequest = $this->_mapper->map($this->request->getJsonRawBody(), new LoginRequest());
 
             $requestValidation = new Login();
             $requestErrors = $requestValidation->validate(null, $loginRequest);

@@ -7,7 +7,7 @@
 namespace App\Library\Requests\Account;
 
 
-class Activate
+class Activate extends BaseRequest
 {
     /** @var string */
     public $Email;

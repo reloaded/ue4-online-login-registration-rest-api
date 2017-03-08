@@ -8,13 +8,17 @@ namespace Reloaded\UnrealEngine4\Web\Config;
 
 require_once 'AppConfig.php';
 
+use App\Library\Requests\BaseRequest;
 use Phalcon\Di\FactoryDefault;
 use Phalcon\DiInterface;
+use Phalcon\Events\Event;
+use Phalcon\Events\Manager;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\Model\Metadata\Memory as MetaDataAdapter;
 use Phalcon\Mvc\Url as UrlResolver;
 use Phalcon\Mvc\View;
 use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
+use ReflectionMethod;
 use Zend\Mail\Transport\File as FileTransport;
 use Zend\Mail\Transport\FileOptions;
 use Zend\Math\Rand;
@@ -98,12 +102,66 @@ class DiConfig
             return new MetaDataAdapter();
         });
 
-        $di->set('dispatcher', function () {
+        $di->set('dispatcher', function () use($di) {
+            // Create an EventsManager
+            $eventsManager = new Manager();
+
+            $eventsManager->attach(
+                "dispatch:beforeDispatchLoop",
+                function (Event $event, $dispatcher) use($di)
+                {
+                    /** @var Dispatcher $dispatcher */
+
+                    // Possible controller class name
+                    $controllerName = $dispatcher->getControllerClass();
+
+                    // Possible method name
+                    $actionName = $dispatcher->getActiveMethod();
+
+                    try
+                    {
+                        // Get the reflection for the method to be executed
+                        $reflection = new ReflectionMethod($controllerName, $actionName);
+
+                        $parameters = $reflection->getParameters();
+
+                        for($i = 0; $i < count($parameters); $i++)
+                        {
+                            #region Map JSON request body to a custom request object if applicable
+
+                            // Get the expected request class name
+                            $className = $parameters[$i]->getClass()->name;
+
+                            // Check if the parameter expects a request class instance
+                            if (is_subclass_of($className,  BaseRequest::class))
+                            {
+                                $jsonMapper = $di->getShared('jsonMapper');
+
+                                $requestObject = $jsonMapper->map(
+                                    $di->getShared('request')->getJsonRawBody(), new $className()
+                                );
+
+                                // Override the parameters by the model instance
+                                $dispatcher->setParam($i, $requestObject);
+                            }
+
+                            #endregion
+                        }
+                    }
+                    catch (\Exception $e)
+                    {
+                        // An exception has occurred, maybe the class or action does not exist?
+                    }
+                }
+            );
+
             $dispatcher = new Dispatcher();
 
             $dispatcher->setDefaultNamespace(
                 'Reloaded\\UnrealEngine4\\Web\\Controllers'
             );
+
+            $dispatcher->setEventsManager($eventsManager);
 
             return $dispatcher;
         });
