@@ -81,16 +81,13 @@ class Players extends AbstractPlayers
         /** @var \Phalcon\Validation\Message\Group $validationMessages */
 
         $emailValidation = new Email();
-        $validationMessages = $emailValidation->validate(null, $this);
-        $this->appendValidationMessages($validationMessages);
+        $this->appendValidationMessages($emailValidation->validate(null, $this));
 
         $inGameNameValidation = new InGameName();
-        $validationMessages = $inGameNameValidation->validate(null, $this);
-        $this->appendValidationMessages($validationMessages);
+        $this->appendValidationMessages($inGameNameValidation->validate(null, $this));
 
         $personalNameValidation = new PersonalName();
-        $validationMessages = $personalNameValidation->validate(null, $this);
-        $this->appendValidationMessages($validationMessages);
+        $this->appendValidationMessages($personalNameValidation->validate(null, $this));
 
         return !$this->validationHasFailed();
     }
