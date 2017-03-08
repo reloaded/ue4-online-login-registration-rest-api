@@ -4,7 +4,7 @@
  * @date 3/2/2017 2:09 AM
  */
 
-namespace App\Library\Net\Responses;
+namespace App\Library\Responses;
 
 
 class ValidationFieldError implements IValidationFieldError

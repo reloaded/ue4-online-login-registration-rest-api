@@ -7,8 +7,8 @@
 namespace Reloaded\UnrealEngine4\Web\Controllers;
 
 use App\Library\Net\HttpStatusCode;
-use App\Library\Net\Responses\DataObjectResponse;
-use App\Library\Net\Responses\FaultResponse;
+use App\Library\Responses\DataObjectResponse;
+use App\Library\Responses\FaultResponse;
 use App\Models\PlayerSessions;
 use Ramsey\Uuid\Uuid;
 

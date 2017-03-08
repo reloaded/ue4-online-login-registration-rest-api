@@ -4,7 +4,7 @@
  * @date 3/3/2017 6:02 PM
  */
 
-namespace App\Library\Net\Responses;
+namespace App\Library\Responses;
 
 
 interface IDataObjectResponse

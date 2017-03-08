@@ -4,7 +4,7 @@
  * @date 3/2/2017 1:13 AM
  */
 
-namespace App\Library\Net\Responses;
+namespace App\Library\Responses;
 
 
 /**

@@ -4,7 +4,7 @@
  * @date 3/3/2017 11:06 AM
  */
 
-namespace App\Library\Net\Responses;
+namespace App\Library\Responses;
 
 
 class DataObjectResponse extends AbstractResponse implements IDataObjectResponse

@@ -4,7 +4,7 @@
  * @date 3/2/2017 12:45 AM
  */
 
-namespace App\Library\Net\Responses;
+namespace App\Library\Responses;
 
 use Phalcon\Mvc\Model\MessageInterface;
 use Phalcon\Validation\Message\Group;
