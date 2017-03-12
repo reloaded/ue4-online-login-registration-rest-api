@@ -138,12 +138,22 @@ class DiConfig
                             {
                                 $jsonMapper = $di->getShared('jsonMapper');
 
-                                $requestObject = $jsonMapper->map(
-                                    $di->getShared('request')->getJsonRawBody(), new $className()
-                                );
+                                try
+                                {
+                                    $requestObject = $jsonMapper->map(
+                                        $di->getShared('request')->getJsonRawBody(), new $className()
+                                    );
 
-                                // Override the parameters by the model instance
-                                $dispatcher->setParam($i, $requestObject);
+                                    // Override the parameters by the model instance
+                                    $dispatcher->setParam($i, $requestObject);
+                                }
+                                catch(\Exception $ex)
+                                {
+                                    $dispatcher->forward([
+                                        'controller' => 'index',
+                                        'action' => 'badRequest'
+                                    ]);
+                                }
                             }
 
                             #endregion

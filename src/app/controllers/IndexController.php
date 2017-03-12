@@ -31,5 +31,15 @@ class IndexController extends ControllerBase
             );
     }
 
+    public function badRequestAction() : ResponseInterface
+    {
+        return $this->response
+            ->setStatusCode(HttpStatusCode::BadRequest)
+            ->setJsonContent(
+                new FaultResponse('We tried to parse your request, but there seems to be a problem with it. ' .
+                    'Please try again after fixing the request.', HttpStatusCode::BadRequest)
+            );
+    }
+
 }
 
