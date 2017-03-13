@@ -51,7 +51,7 @@ class RouteConfig
             'action' => 'resetPassword'
         ]);
 
-        $router->addPost('/session/login', [
+        $router->addPost('/session', [
             'controller' => 'session',
             'action' => 'login'
         ]);
